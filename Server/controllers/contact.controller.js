@@ -6,7 +6,8 @@ export const contact = async (req, res) => {
         name: request.name,
         email: request.email,
        contact_number: request.contact_number,
-        message: request.message
+        message: request.message,
+        Bus_number:request.Bus_number
     }
 
     try {
