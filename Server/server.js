@@ -9,6 +9,7 @@ const app = express();
 import { login_route } from './routes/login.route.js';
 import { contact_data } from './routes/contact.route.js';
 import { verify_Mobile } from './routes/verifyMobile.js';
+import { heandlecomplain_route } from './routes/handlecomplaits.route.js';
 app.use(cors());
 app.use(express.json());
 mongoose.connect(server.DB_URL)
@@ -53,6 +54,7 @@ reg_route(app)
 login_route(app)
 contact_data(app)
 verify_Mobile(app)
+heandlecomplain_route(app)
 
 app.listen(server.PORT, () => {
     console.log(`Server is running on port ${server.PORT}`);

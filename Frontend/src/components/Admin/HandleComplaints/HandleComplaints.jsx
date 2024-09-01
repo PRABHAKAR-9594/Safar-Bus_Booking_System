@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
 const HandleComplaintsPage = () => {
   const [formData, setFormData] = useState({
     busNumber: '',
-    startDate: '',
-    endDate: ''
   });
 
   const [complaintData, setComplaintData] = useState(null);
@@ -17,30 +15,23 @@ const HandleComplaintsPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
 
+
+ 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8080/complain', {
+        Bus_number: formData.busNumber
+      });
+  
+      var Bus_data=response.data
+    } catch (error) {
+      console.error('Error while submitting the complaint:', error);
+    }
     // Mock Data (You would replace this with real API data)
-    const mockComplaintData = [
-      {
-        date: '2024-08-15',
-        user: 'John Doe',
-        complaint: 'Bus arrived late by 30 minutes.',
-        status: 'Pending'
-      },
-      {
-        date: '2024-08-16',
-        user: 'Jane Smith',
-        complaint: 'AC was not working properly.',
-        status: 'Resolved'
-      },
-      {
-        date: '2024-08-17',
-        user: 'Tom Johnson',
-        complaint: 'Seats were uncomfortable.',
-        status: 'Pending'
-      }
-    ];
+    const mockComplaintData = Bus_data
 
     setComplaintData(mockComplaintData);
   };
@@ -49,45 +40,17 @@ const HandleComplaintsPage = () => {
     <div className="p-6 mt-8 mb-8 max-w-4xl mx-auto bg-gradient-to-r from-red-400 to-purple-500 shadow-lg rounded-lg">
       <h2 className="text-3xl font-extrabold text-white mb-6 text-center">Handle Complaints</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div>
-            <label htmlFor="busNumber" className="block text-sm font-semibold text-white">Bus Number / Name</label>
-            <input
-              type="text"
-              id="busNumber"
-              name="busNumber"
-              value={formData.busNumber}
-              onChange={handleChange}
-              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="startDate" className="block text-sm font-semibold text-white">Start Date</label>
-            <input
-              type="date"
-              id="startDate"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="endDate" className="block text-sm font-semibold text-white">End Date</label>
-            <input
-              type="date"
-              id="endDate"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
-              required
-            />
-          </div>
+        <div className="flex flex-col items-center justify-center"> {/* Center the entire section */}
+          <label htmlFor="busNumber" className="block text-sm font-semibold text-white text-center">Bus Number / Name</label>
+          <input
+            type="text"
+            id="busNumber"
+            name="busNumber"
+            value={formData.busNumber}
+            onChange={handleChange}
+            className="mt-2 block w-full max-w-xs px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
+            required
+          />
         </div>
 
         <div className="flex justify-center">
@@ -108,13 +71,13 @@ const HandleComplaintsPage = () => {
             {complaintData.map((complaint, index) => (
               <div key={index} className="bg-gray-100 p-4 rounded-lg shadow-md">
                 <p className="text-lg text-gray-800">
-                  <strong>Date:</strong> {complaint.date}
+                  <strong>Date:</strong> {complaint.createdAt}
                 </p>
                 <p className="text-lg text-gray-800">
-                  <strong>User:</strong> {complaint.user}
+                  <strong>User:</strong> {complaint.name}
                 </p>
                 <p className="text-lg text-gray-800">
-                  <strong>Complaint:</strong> {complaint.complaint}
+                  <strong>Complaint:</strong> {complaint.message}
                 </p>
                 <p className="text-lg text-gray-800">
                   <strong>Status:</strong> {complaint.status}
