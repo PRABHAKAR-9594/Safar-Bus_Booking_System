@@ -3,6 +3,7 @@ import axios from 'axios';
 
 export default function Contact() {
     const [message, setMessage] = useState({
+        Bus_number:'',
         name: '',
         email: '',
         contact_number: '',
@@ -149,6 +150,20 @@ export default function Contact() {
 
                         {/* Contact Form Section */}
                         <form className="p-6 bg-white shadow-md sm:rounded-lg flex flex-col space-y-4" onSubmit={handleMessageSubmit}>
+                            <div className="flex flex-col">
+                                <label htmlFor="name" className="hidden">
+                                    Bus Number
+                                </label>
+                                <input
+                                    type="text"
+                                    name="Bus_number"
+                                    id="name"
+                                    value={message.Bus_number}
+                                    onChange={handleChange}
+                                    placeholder="Bus Number"
+                                    className="w-full mt-2 py-3 px-4 rounded-lg bg-gray-100 border border-gray-300 text-gray-800 font-semibold focus:border-blue-500 focus:outline-none"
+                                />
+                            </div>
                             <div className="flex flex-col">
                                 <label htmlFor="name" className="hidden">
                                     Full Name
