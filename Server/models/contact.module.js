@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const contact_schema =mongoose.Schema({
+    Bus_number:{
+        type:String,
+        require:true
+    },
     name:{
         type:String,
         require:true
@@ -17,6 +21,13 @@ const contact_schema =mongoose.Schema({
         type:String,
         require:true
     },
+    status:{
+        type:String,
+        require:true,
+        default:'Pending..',
+        enum:["Pending..","Solution Provided"]
+    },
+   
 },{timestamps:true,versionKey:false})
 
 export const contact_us=mongoose.model("Support",contact_schema)
