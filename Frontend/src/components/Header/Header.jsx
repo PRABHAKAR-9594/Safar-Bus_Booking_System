@@ -48,7 +48,7 @@ export default function Header( {userName="Ram"}) {
               className="text-blue-800 bg-yellow-300 hover:bg-yellow-200 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none flex items-center"
             >
               <img src={mybooking_logo} alt="My Bookings Icon" className="w-5 h-5 mr-2" />
-              My Bookings Page
+              My Bookings 
             </Link>
             
             
