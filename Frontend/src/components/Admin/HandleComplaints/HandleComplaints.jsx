@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+
 const HandleComplaintsPage = () => {
   const [formData, setFormData] = useState({
     busNumber: '',
@@ -11,37 +12,80 @@ const HandleComplaintsPage = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
-
-
- 
+  const token = localStorage.getItem('token');
+  const api = axios.create({
+    baseURL: 'http://localhost:8080',
+    headers: {
+      'x-access-token': token,
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/complain', {
-        Bus_number: formData.busNumber
+      const response = await api.post('/complain', {
+        Bus_number: formData.busNumber,
       });
-  
-      var Bus_data=response.data
+
+      const Bus_data = response.data;
+      setComplaintData(Bus_data);
     } catch (error) {
       console.error('Error while submitting the complaint:', error);
     }
-    // Mock Data (You would replace this with real API data)
-    const mockComplaintData = Bus_data
+  };
 
-    setComplaintData(mockComplaintData);
+  const handleResolve = async (index) => {
+    const complaint = complaintData[index];
+
+    try {
+      const response = await api.post('/complainupdate', {
+        _id: complaint._id,
+      });
+
+      if (response.status === 200) {
+        setComplaintData((prevData) =>
+          prevData.map((comp, i) =>
+            i === index ? { ...comp, status: 'Solution Provided' } : comp
+          )
+        );
+      } else {
+        console.error('Failed to update complaint status');
+      }
+    } catch (error) {
+      console.error('Error while updating the complaint status:', error);
+    }
+  };
+
+  const handleDelete = async (index) => {
+    const complaint = complaintData[index];
+
+    try {
+      const response = await api.post('/complaindelete', {
+        _id: complaint._id,
+      });
+
+      if (response.status === 200) {
+        setComplaintData((prevData) => prevData.filter((_, i) => i !== index));
+      } else {
+        console.error('Failed to delete complaint');
+      }
+    } catch (error) {
+      console.error('Error while deleting the complaint:', error);
+    }
   };
 
   return (
     <div className="p-6 mt-8 mb-8 max-w-4xl mx-auto bg-gradient-to-r from-red-400 to-purple-500 shadow-lg rounded-lg">
       <h2 className="text-3xl font-extrabold text-white mb-6 text-center">Handle Complaints</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="flex flex-col items-center justify-center"> {/* Center the entire section */}
-          <label htmlFor="busNumber" className="block text-sm font-semibold text-white text-center">Bus Number / Name</label>
+        <div className="flex flex-col items-center justify-center">
+          <label htmlFor="busNumber" className="block text-sm font-semibold text-white text-center">
+            Bus Number / Name
+          </label>
           <input
             type="text"
             id="busNumber"
@@ -83,7 +127,7 @@ const HandleComplaintsPage = () => {
                   <strong>Status:</strong> {complaint.status}
                 </p>
                 <div className="flex justify-between mt-4">
-                  {complaint.status === 'Pending' && (
+                  {complaint.status === 'Pending..' && (
                     <button
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400"
                       onClick={() => handleResolve(index)}
@@ -91,12 +135,14 @@ const HandleComplaintsPage = () => {
                       Mark as Resolved
                     </button>
                   )}
-                  <button
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
-                    onClick={() => handleDelete(index)}
-                  >
-                    Delete Complaint
-                  </button>
+                  {complaint.status === 'Solution Provided' && (
+                    <button
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-400"
+                      onClick={() => handleDelete(index)}
+                    >
+                      Delete Complaint
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -105,20 +151,6 @@ const HandleComplaintsPage = () => {
       )}
     </div>
   );
-
-  function handleResolve(index) {
-    // Update complaint status to 'Resolved'
-    setComplaintData((prevData) =>
-      prevData.map((complaint, i) =>
-        i === index ? { ...complaint, status: 'Resolved' } : complaint
-      )
-    );
-  }
-
-  function handleDelete(index) {
-    // Remove complaint from the list
-    setComplaintData((prevData) => prevData.filter((_, i) => i !== index));
-  }
 };
 
 export default HandleComplaintsPage;
