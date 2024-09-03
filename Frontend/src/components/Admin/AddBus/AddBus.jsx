@@ -1,31 +1,53 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
 const AddBusForm = () => {
   const [formData, setFormData] = useState({
-    busNumber: '',
-    busName: '',
-    seats: '',
-    pricePerSeats: '',
-    source: '',
-    destination: '',
-    sourceTime: '',
-    destinationTime: '',
-    busType: '',
-    image: null
+
+    Bus_number: '',
+
+    Bus_name: '',
+
+    Number_seat: '',
+
+    Seat_price: '',
+
+    Source: '',
+
+    Destination: '',
+
+    Source_time: '',
+
+    Destination_time: '',
+
+    Bus_type: '',
+
   });
 
+
+  const token = localStorage.getItem('token');
+  const api = axios.create({
+    baseURL: 'http://localhost:8080',
+    headers: {
+      'x-access-token': token,
+    },
+  });
+
+
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'file' ? files[0] : value
+      [name]: value
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission logic
-    console.log(formData);
+
+    const response = await api.post('/addbus',formData);
+
+    console.log(response);
   };
 
   return (
@@ -38,8 +60,8 @@ const AddBusForm = () => {
             <input
               type="text"
               id="busNumber"
-              name="busNumber"
-              value={formData.busNumber}
+              name="Bus_number"
+              value={formData.Bus_number}
               onChange={handleChange}
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
               required
@@ -51,8 +73,8 @@ const AddBusForm = () => {
             <input
               type="text"
               id="busName"
-              name="busName"
-              value={formData.busName}
+              name="Bus_name"
+              value={formData.Bus_name}
               onChange={handleChange}
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
               required
@@ -64,8 +86,8 @@ const AddBusForm = () => {
             <input
               type="number"
               id="seats"
-              name="seats"
-              value={formData.seats}
+              name="Number_seat"
+              value={formData.Number_seat}
               onChange={handleChange}
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
               required
@@ -77,8 +99,8 @@ const AddBusForm = () => {
             <input
               type="number"
               id="pricePerSeats"
-              name="pricePerSeats"
-              value={formData.pricePerSeats}
+              name="Seat_price"
+              value={formData.Seat_price}
               onChange={handleChange}
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
               required
@@ -90,8 +112,8 @@ const AddBusForm = () => {
             <input
               type="text"
               id="source"
-              name="source"
-              value={formData.source}
+              name="Source"
+              value={formData.Source}
               onChange={handleChange}
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
               required
@@ -103,8 +125,8 @@ const AddBusForm = () => {
             <input
               type="time"
               id="sourceTime"
-              name="sourceTime"
-              value={formData.sourceTime}
+              name="Source_time"
+              value={formData.Source_time}
               onChange={handleChange}
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
               required
@@ -116,8 +138,8 @@ const AddBusForm = () => {
             <input
               type="text"
               id="destination"
-              name="destination"
-              value={formData.destination}
+              name="Destination"
+              value={formData.Destination}
               onChange={handleChange}
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
               required
@@ -129,8 +151,8 @@ const AddBusForm = () => {
             <input
               type="time"
               id="destinationTime"
-              name="destinationTime"
-              value={formData.destinationTime}
+              name="Destination_time"
+              value={formData.Destination_time}
               onChange={handleChange}
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
               required
@@ -142,8 +164,8 @@ const AddBusForm = () => {
             <label htmlFor="busType" className="block text-sm font-semibold text-gray-100">Bus Type</label>
             <select
               id="busType"
-              name="busType"
-              value={formData.busType}
+              name="Bus_type"
+              value={formData.Bus_type}
               onChange={handleChange}
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
               required
@@ -154,16 +176,7 @@ const AddBusForm = () => {
             </select>
           </div>
 
-          <div className="lg:col-span-1">
-            <label htmlFor="image" className="block text-sm font-semibold text-gray-100">Bus Image</label>
-            <input
-              type="file"
-              id="image"
-              name="image"
-              onChange={handleChange}
-              className="mt-2 block w-full text-sm text-red-600 file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-lg file:text-sm file:font-medium file:bg-gray-100 hover:file:bg-gray-200"
-            />
-          </div>
+
         </div>
 
         <div className="flex justify-center">

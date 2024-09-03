@@ -8,8 +8,7 @@ export const login = async (req, res) => {
         const { email, password, userType} = req.body;
 
         // Find the user by email
-        console.log("aaaa",userType)
-        console.log("aaaa",email)
+        
         const user = await reg_model.findOne({ email , userType });
 
         if (!user) {
