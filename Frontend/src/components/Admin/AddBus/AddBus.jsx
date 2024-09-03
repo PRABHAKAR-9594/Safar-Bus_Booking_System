@@ -51,7 +51,7 @@ try{
 
 }
 catch(error){
-  alert("Plese try after Some time !")
+  alert("Bus number already exist !")
 }
   };
 

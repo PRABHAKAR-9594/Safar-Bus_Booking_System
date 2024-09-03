@@ -1,33 +1,37 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
 const DeleteBusForm = () => {
   const [busSearch, setBusSearch] = useState('');
   const [busDetails, setBusDetails] = useState(null);
+
 
   const handleSearchChange = (e) => {
     setBusSearch(e.target.value);
   };
 
-  const handleSearchSubmit = (e) => {
+  const token = localStorage.getItem('token');
+  const api = axios.create({
+    baseURL: 'http://localhost:8080',
+    headers: {
+      'x-access-token': token,
+    },
+  });
+
+ 
+  const handleSearchSubmit =async (e) => {
     e.preventDefault();
-    // Simulate searching for the bus by number or name
-    // Replace this with actual logic to fetch the bus data
-    const foundBus = {
-      busNumber: '12345',
-      busName: 'Express Bus',
-      seats: 40,
-      pricePerSeats: 200,
-      source: 'City A',
-      destination: 'City B',
-      sourceTime: '08:00',
-      destinationTime: '12:00',
-      busType: 'AC',
-    };
-    setBusDetails(foundBus); // Set the bus details
+   
+    const foundBus = await api.post('/businfo',{'Bus_number':busSearch});
+console.log(foundBus.data)
+
+    
+    setBusDetails(foundBus.data); // Set the bus details
   };
 
-  const handleDelete = () => {
-    // Handle the deletion logic here
+  const handleDelete = async(e) => {
+    e.preventDefault()
+    const deletebus= await api.post('/deletebus',{'Bus_number':busSearch})
+      alert("Bus Removed !")
     console.log('Bus deleted:', busDetails.busNumber);
     // Clear form after deletion
     setBusDetails(null);
@@ -69,7 +73,7 @@ const DeleteBusForm = () => {
                 <label className="block text-sm font-medium text-gray-700">Bus Number</label>
                 <input
                   type="text"
-                  value={busDetails.busNumber}
+                  value={busDetails.Bus_number}
                   readOnly
                   className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                 />
@@ -79,7 +83,7 @@ const DeleteBusForm = () => {
                 <label className="block text-sm font-medium text-gray-700">Bus Name</label>
                 <input
                   type="text"
-                  value={busDetails.busName}
+                  value={busDetails.Bus_name}
                   readOnly
                   className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                 />
@@ -89,7 +93,7 @@ const DeleteBusForm = () => {
                 <label className="block text-sm font-medium text-gray-700">Number of Seats</label>
                 <input
                   type="number"
-                  value={busDetails.seats}
+                  value={busDetails.Number_seat}
                   readOnly
                   className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                 />
@@ -99,7 +103,7 @@ const DeleteBusForm = () => {
                 <label className="block text-sm font-medium text-gray-700">Price Per Seat</label>
                 <input
                   type="number"
-                  value={busDetails.pricePerSeats}
+                  value={busDetails.Seat_price}
                   readOnly
                   className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                 />
@@ -109,7 +113,7 @@ const DeleteBusForm = () => {
                 <label className="block text-sm font-medium text-gray-700">Source</label>
                 <input
                   type="text"
-                  value={busDetails.source}
+                  value={busDetails.Source}
                   readOnly
                   className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                 />
@@ -119,7 +123,7 @@ const DeleteBusForm = () => {
                 <label className="block text-sm font-medium text-gray-700">Destination</label>
                 <input
                   type="text"
-                  value={busDetails.destination}
+                  value={busDetails.Destination}
                   readOnly
                   className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                 />
@@ -129,7 +133,7 @@ const DeleteBusForm = () => {
                 <label className="block text-sm font-medium text-gray-700">Source Time</label>
                 <input
                   type="time"
-                  value={busDetails.sourceTime}
+                  value={busDetails.Source_time}
                   readOnly
                   className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                 />
@@ -139,7 +143,7 @@ const DeleteBusForm = () => {
                 <label className="block text-sm font-medium text-gray-700">Destination Time</label>
                 <input
                   type="time"
-                  value={busDetails.destinationTime}
+                  value={busDetails.Destination_time}
                   readOnly
                   className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                 />
@@ -149,7 +153,7 @@ const DeleteBusForm = () => {
                 <label className="block text-sm font-medium text-gray-700">Bus Type</label>
                 <input
                   type="text"
-                  value={busDetails.busType}
+                  value={busDetails.Bus_type}
                   readOnly
                   className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                 />
