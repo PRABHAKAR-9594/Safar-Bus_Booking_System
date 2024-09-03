@@ -44,10 +44,15 @@ const AddBusForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission logic
-
+try{
     const response = await api.post('/addbus',formData);
-
     console.log(response);
+    alert("Bus Added Successfully !")
+
+}
+catch(error){
+  alert("Plese try after Some time !")
+}
   };
 
   return (

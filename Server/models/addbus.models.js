@@ -4,7 +4,8 @@ const addbus=mongoose.Schema({
 
     Bus_number:{
         type:String,
-        require:true
+        require:true,
+        unique: true
     },
     Bus_name:{
         type:String,
