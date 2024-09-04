@@ -33,11 +33,23 @@ export default function Contact() {
             const response = await api.post('/contact', message);
             console.log(response.data);
             alert("We will contact you soon!");
+            console.log(response.status);
+    
         } catch (error) {
             console.log("Error while sending!", error);
-            alert("Plese login first !");
+            if (error.response) {  // Check if the error response exists
+                const status = error.response.status;
+                if (status === 400) {
+                    alert("Bus Number Not Valid!");
+                } else if (status === 403) {
+                    alert("Login First!");
+                }
+            } else {
+                alert("An error occurred. Please try again.");
+            }
         }
     };
+    
 
     return (
         <div className="relative flex items-top justify-center min-h-screen bg-gray-100 sm:items-center sm:pt-8">
