@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import bus_background_logo from '../../assets/bus_background_logo.jpg'; // Import the bus image
+import { Link } from 'react-router-dom';
 
 function BusBookingForm() {
   const [source, setSource] = useState('');
@@ -77,11 +78,13 @@ function BusBookingForm() {
           </div>
 
           {/* Search Button */}
+          <Link to="/searchBus">
           <button
             className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition duration-300 text-white font-bold py-3 px-8 rounded-full shadow-lg mt-7"
           >
             Search
           </button>
+          </Link>
         </div>
       </div>
 

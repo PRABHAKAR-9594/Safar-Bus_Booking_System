@@ -24,6 +24,7 @@ import ForgetPassword from './components/ForgetPassword/ForgetPassword.jsx'
 import {Provider} from 'react-redux'
 import Store from './App/Store.js'
 import PageNotFound from '../PageNotFound.jsx'
+import SearchBus from "../src/components/SearchBus/SearchBus.jsx"
 
 
 
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
       <Route path='status' element={<Status />} />
       <Route path='contact' element={<Contact />} />
       <Route path='help' element={<Help />} />
+      <Route path='/searchBus' element={<SearchBus />} />
 
       <Route path='admin' element={ <AdminLayout/>} >
       <Route path='' element={<AdminHome />} />
