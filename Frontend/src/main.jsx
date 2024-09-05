@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
-import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
+import { Form, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import Layout from './Layout.jsx'
+import SearchBusLayout from './SeachBusLayout.jsx'
 import Home from './components/Home/Home.jsx'
 import AdminHome from './components/Admin/Home/AdminHome.jsx'
 import Status from './components/Status/Status.jsx'
@@ -26,6 +27,7 @@ import Store from './App/Store.js'
 import ViewSeats from '../src/components/ViewSeats/ViewSeats.jsx'
 import PageNotFound from '../PageNotFound.jsx'
 import SearchBus from "../src/components/SearchBus/SearchBus.jsx"
+import FormPage from './components/FormPage/FormPage.jsx'
 
 
 
@@ -41,8 +43,6 @@ const router = createBrowserRouter(
       <Route path='contact' element={<Contact />} />
       <Route path='help' element={<Help />} />
 
-      <Route path='searchBus' element={<SearchBus />} />
-      <Route path='viewSeats' element={<ViewSeats />} />
       
       
 
@@ -66,6 +66,11 @@ const router = createBrowserRouter(
        />
        
     </Route>
+    <Route path='searchBus' element={<SearchBusLayout />}>
+      <Route path='' element={<SearchBus />} />
+      <Route path='viewSeats' element={<ViewSeats />} />
+      <Route path='viewSeats/Form' element={<FormPage/>} />
+      </Route>
     
     </>
   )
