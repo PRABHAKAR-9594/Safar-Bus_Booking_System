@@ -23,6 +23,7 @@ import HandleComplaints from './components/Admin/HandleComplaints/HandleComplain
 import ForgetPassword from './components/ForgetPassword/ForgetPassword.jsx'
 import {Provider} from 'react-redux'
 import Store from './App/Store.js'
+import ViewSeats from '../src/components/ViewSeats/ViewSeats.jsx'
 import PageNotFound from '../PageNotFound.jsx'
 import SearchBus from "../src/components/SearchBus/SearchBus.jsx"
 
@@ -32,13 +33,18 @@ import SearchBus from "../src/components/SearchBus/SearchBus.jsx"
 const router = createBrowserRouter(
  
   createRoutesFromElements(
+    <>
     <Route path='/' element={<Layout />}>
       <Route path='' element={<Home />} />
       <Route path='about' element={<About />} />
       <Route path='status' element={<Status />} />
       <Route path='contact' element={<Contact />} />
       <Route path='help' element={<Help />} />
-      <Route path='/searchBus' element={<SearchBus />} />
+
+      <Route path='searchBus' element={<SearchBus />} />
+      <Route path='viewSeats' element={<ViewSeats />} />
+      
+      
 
       <Route path='admin' element={ <AdminLayout/>} >
       <Route path='' element={<AdminHome />} />
@@ -58,7 +64,10 @@ const router = createBrowserRouter(
       path='github' 
       element={<Github />}
        />
+       
     </Route>
+    
+    </>
   )
 )
 

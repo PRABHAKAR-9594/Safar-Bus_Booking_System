@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaBus, FaClock, FaRupeeSign, FaArrowRight, FaCheckCircle, FaMapMarkerAlt, FaUtensils } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 function BusCard({ bus }) {
   // Provide default values to avoid errors
@@ -48,11 +49,15 @@ function BusCard({ bus }) {
         </div>
 
         {/* Call to Action */}
+        
         <div className="text-right mt-1">
+        <Link to="/viewSeats">
           <button className="bg-red-500 text-white px-4 py-2 rounded-full font-semibold text-lg shadow-md hover:bg-red-600 transition-colors duration-300">
             Book Now
           </button>
+          </Link>
         </div>
+        
 
       </div>
 
