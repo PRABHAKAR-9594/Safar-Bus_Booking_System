@@ -160,7 +160,40 @@ console.log(foundBus.data)
                   className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
                 />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Bus Class</label>
+                <input
+                  type="text"
+                  value={busDetails.Bus_Class}
+                  readOnly
+                  className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Timing</label>
+                <input
+                  type="text"
+                  value={busDetails.Timing}
+                  readOnly
+                  className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Food Facility</label>
+                <input
+                  type="text"
+                  value={busDetails.Food_Facility}
+                  readOnly
+                  className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
+                />
+              </div>
+
+
+              
             </div>
+            
+            
 
             <div className="text-center mt-8">
               <button

@@ -31,6 +31,15 @@ if(!req.body.Destination_time){
 if(!req.body.Bus_type){
     res.status(400).send({"Message":"Plese Enter the Bus type ! "})   
 }
+if(!req.body. Bus_Class){
+    res.status(400).send({"Message":"Plese Select the Bus Class ! "})   
+}
+if(!req.body.Timing){
+    res.status(400).send({"Message":"Plese Select the Bus timing ! "})   
+}
+if(!req.body. Food_Facility){
+    res.status(400).send({"Message":"Plese Select the Food Facility ! "})   
+}
 
 const busdata=await add_bus.findOne({Bus_number:busnumber})
 if(busdata){
