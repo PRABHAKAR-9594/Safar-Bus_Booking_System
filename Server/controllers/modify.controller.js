@@ -11,7 +11,10 @@ export const ModifyBus = async (req, res) => {
         Source_time: req.body.Source_time,
         Destination: req.body.Destination,
         Destination_time: req.body.Destination_time,
-        Bus_type: req.body.Bus_type
+        Bus_type: req.body.Bus_type,
+        Food_Facility:req.body.Food_Facility,
+        Timing:req.body.Timing,
+        Bus_Class:req.body.Bus_Class
     };
 
     try {

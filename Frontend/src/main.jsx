@@ -11,7 +11,7 @@ import Help from './components/Help/Help.jsx'
 import About from './components/About/About.jsx'
 import Contact from './components/Contact/Contact.jsx'
 import User from './components/User/User.jsx'
-import Github, { githubInfoLoader } from './components/Github/Github.jsx'
+
 import Register from './components/Register/register.jsx'
 import AddBus from './components/Admin/AddBus/AddBus.jsx'
 import AdminLayout from './components/Admin/AdminLayout/AdminLayout.jsx'
@@ -59,11 +59,7 @@ const router = createBrowserRouter(
       <Route path='user/:userid' element={<User />} />
       <Route path='loginandreg' element={<Register/>} />
       <Route path='ForgetPassword' element={<ForgetPassword/>} />
-      <Route 
-      loader={githubInfoLoader}
-      path='github' 
-      element={<Github />}
-       />
+   
        
     </Route>
     

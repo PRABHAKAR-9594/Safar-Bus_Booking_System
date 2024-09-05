@@ -11,7 +11,10 @@ export const add_bus_controller = async (req, res) => {
         Source_time: request.Source_time,
         Destination: request.Destination,
         Destination_time: request.Destination_time,
-        Bus_type: request.Bus_type
+        Bus_type: request.Bus_type,
+        Food_Facility:request.Food_Facility,
+        Timing:request.Timing,
+        Bus_Class:request.Bus_Class
     }
 
 

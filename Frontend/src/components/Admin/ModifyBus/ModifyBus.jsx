@@ -171,6 +171,52 @@ const EditBusForm = () => {
                     <option value="Non-AC">Non-AC</option>
                   </select>
                 </div>
+                <div>
+            <label htmlFor="busClass" className="block text-sm font-medium text-gray-700">Bus Class</label>
+            <select
+              id="BusClass"
+              name="Bus_Class"
+              value={formData.Bus_Class}
+              onChange={handleFormChange}
+              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
+              required
+            >
+              <option value="" disabled>Select Bus Class</option>
+              <option value="Sleeper">Sleeper</option>
+              <option value="Sitting">Sitting</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="busType" className="block text-sm font-medium text-gray-700">Timing</label>
+            <select
+              id="Timing"
+              name="Timing"
+              value={formData.Timing}
+              onChange={handleFormChange}
+              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
+              required
+            >
+              <option value="" disabled>Select Bus Timing</option>
+              <option value="Day">Day</option>
+              <option value="Night">Night</option>
+            </select>
+          </div>
+          
+          <div>
+            <label htmlFor="busType" className="block text-sm font-medium text-gray-700">Food Facility</label>
+            <select
+              id="Food_Facility"
+              name="Food_Facility"
+              value={formData.Food_Facility}
+              onChange={handleFormChange}
+              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
+              required
+            >
+              <option value="" disabled>Food Facility</option>
+              <option value="Avaliable">Avaliable</option>
+              <option value="Not-Avalible">Not-Avalible</option>
+            </select>
+          </div>
 
                
               </div>

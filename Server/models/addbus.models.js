@@ -38,7 +38,23 @@ const addbus=mongoose.Schema({
     Bus_type:{
         type:String,
         require:true
-    }
+    
+    },
+    Bus_Class:{
+        type:String,
+        require:true
+    
+    },
+    Timing:{
+        type:String,
+        require:true
+    
+    },
+    Food_Facility:{
+        type:String,
+        require:true
+    
+    },
 
 
 
