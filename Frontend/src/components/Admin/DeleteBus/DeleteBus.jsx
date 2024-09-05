@@ -45,12 +45,13 @@ console.log(foundBus.data)
           <h2 className="text-3xl font-extrabold text-gray-800 text-center mb-6">Search Bus to Delete</h2>
           <form onSubmit={handleSearchSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Bus Number or Name</label>
+              <label className="block text-sm font-medium text-gray-700">Bus Number </label>
               <input
+              required="true"
                 type="text"
                 value={busSearch}
                 onChange={handleSearchChange}
-                placeholder="Enter Bus Number or Name"
+                placeholder="Enter Bus Number "
                 className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
               />
             </div>
@@ -82,6 +83,7 @@ console.log(foundBus.data)
               <div>
                 <label className="block text-sm font-medium text-gray-700">Bus Name</label>
                 <input
+                  required="true"
                   type="text"
                   value={busDetails.Bus_name}
                   readOnly
