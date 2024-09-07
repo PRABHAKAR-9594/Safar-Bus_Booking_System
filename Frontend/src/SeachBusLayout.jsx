@@ -8,14 +8,17 @@ import { AuthProvider } from './authcontext';
 function Layout() {
   const location = useLocation();
 
-  // Determine if we are on the /admin route
+  // Determine if we are on the /admin route or the /searchBus/viewSeats/Form/payment route
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isPaymentRoute = location.pathname === '/searchBus/viewSeats/Form/payment';
+  const isReceiptRoute = location.pathname === '/searchBus/viewSeats/Form/payment/receipt';
+
 
   return (
     <AuthProvider>
-      {!isAdminRoute && <Header />} {/* Conditionally render Header */}
+      {!isAdminRoute && !isPaymentRoute && !isReceiptRoute && <Header />} {/* Conditionally render Header */}
       <Outlet />
-      {!isAdminRoute && <Footer />} {/* Conditionally render Footer */}
+      {!isAdminRoute && !isPaymentRoute &&  !isReceiptRoute && <Footer />} {/* Conditionally render Footer */}
     </AuthProvider>
   );
 }

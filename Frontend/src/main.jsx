@@ -28,6 +28,8 @@ import ViewSeats from '../src/components/ViewSeats/ViewSeats.jsx'
 import PageNotFound from '../PageNotFound.jsx'
 import SearchBus from "../src/components/SearchBus/SearchBus.jsx"
 import FormPage from './components/FormPage/FormPage.jsx'
+import Payment from './components/Payment/PaymentMethod.jsx'
+import Receipt from './components/Receipt/Receipt.jsx'
 
 
 
@@ -66,6 +68,8 @@ const router = createBrowserRouter(
       <Route path='' element={<SearchBus />} />
       <Route path='viewSeats' element={<ViewSeats />} />
       <Route path='viewSeats/Form' element={<FormPage/>} />
+      <Route path='viewSeats/Form/payment' element={<Payment/>} />
+      <Route path='viewSeats/Form/payment/receipt' element={<Receipt/>} />
       </Route>
     
     </>

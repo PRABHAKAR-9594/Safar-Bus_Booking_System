@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import TopBar from '../BusTopbar/BusTopbar';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const PassengerDetailsForm = () => {
   const location = useLocation();
@@ -70,7 +71,6 @@ const PassengerDetailsForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate all fields before submission
     let isValid = true;
     const updatedDetails = [...passengerDetails];
 
@@ -110,8 +110,7 @@ const PassengerDetailsForm = () => {
       console.log(passengerDetails);
       setIsSubmitting(false);
 
-      // Navigate to the payment page or next step
-      navigate('/payment', { state: { passengerDetails } });
+      navigate('/searchBus/viewSeats/Form/payment', { state: { passengerDetails } });
     }, 2000);
   };
 
@@ -121,66 +120,74 @@ const PassengerDetailsForm = () => {
     });
   };
 
-  const renderInputField = (type, index, field, placeholder) => (
+  const renderInputField = (type, index, field, placeholder, sizeClass = 'w-full') => (
     <input
       type={type}
       placeholder={placeholder}
       value={passengerDetails[index][field]}
       onChange={(e) => handleChange(index, field, e.target.value)}
-      className={`block w-full mb-2 p-3 border-2 rounded-md focus:outline-none focus:border-blue-600 transition-all shadow-sm ${
-        passengerDetails[index].errors[field] ? 'border-red-500 error' : 'border-gray-300'
-      }`}
+      className={`block ${sizeClass} mb-2 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm ${
+        passengerDetails[index].errors[field] ? 'border-red-500 error ring-red-500' : 'border-gray-300'
+      } transition-all duration-300 bg-gray-50`}
       required
     />
   );
 
+  const renderProgressBar = () => {
+    const completed = (selectedSeats.length - passengerDetails.filter(pd => pd.name === '').length) / selectedSeats.length;
+    return (
+      <div className="relative w-full h-2 mb-4 bg-gray-200 rounded-full">
+        <div
+          className="absolute top-0 left-0 h-full bg-indigo-600 rounded-full transition-all duration-500"
+          style={{ width: `${completed * 100}%` }}
+        ></div>
+      </div>
+    );
+  };
+
   return (
-    <div className="p-8 bg-gradient-to-r from-indigo-50 to-purple-50 min-h-screen animate-fadeIn">
-      <TopBar source="Mumbai" destination="Pune" date="2024-09-01" />
-      <h2 className="text-4xl font-semibold text-indigo-800 mb-8">Passenger Details</h2>
+    <div className="p-8 bg-gradient-to-r from-gray-100 to-blue-50 min-h-screen">
+      <TopBar source="Mumbai" destination="Pune" date="2024-09-01" seats={selectedSeats} />
+      <h2 className="text-3xl font-bold text-indigo-700 mb-8 mt-32 text-center">Passenger Details</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-10">
+      {renderProgressBar()}
+
+      <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl mx-auto">
         {selectedSeats.map((seat, index) => (
-          <div key={seat} className="p-6 bg-white rounded-xl shadow-md transition-transform hover:scale-105 animate-fadeInSlow">
-            <h3 className="text-2xl font-medium text-indigo-700 mb-4">Seat {seat}:</h3>
+          <div key={seat} className="p-6 bg-purple-200 rounded-lg shadow-md border border-gray-300 transition-all duration-300">
+            <h3 className="text-2xl font-bold text-blue-800 mb-4">
+              Passenger {index + 1} (Seat {seat}):
+            </h3>
 
-            {/* Grid Layout for Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Full Name Field */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {renderInputField('text', index, 'name', 'Full Name')}
               {passengerDetails[index].errors.name && (
                 <p className="text-red-500">{passengerDetails[index].errors.name}</p>
               )}
 
-              {/* Age Field */}
-              {renderInputField('number', index, 'age', 'Age')}
-              {passengerDetails[index].errors.age && (
-                <p className="text-red-500">{passengerDetails[index].errors.age}</p>
-              )}
+              <div className="grid grid-cols-2 gap-4">
+                {renderInputField('number', index, 'age', 'Age', 'w-full')}
+                <select
+                  value={passengerDetails[index].gender}
+                  onChange={(e) => handleChange(index, 'gender', e.target.value)}
+                  className="block w-full p-2 rounded-lg border-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 bg-gray-50"
+                  required
+                >
+                  <option value="">Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+                {passengerDetails[index].errors.gender && (
+                  <p className="text-red-500">{passengerDetails[index].errors.gender}</p>
+                )}
+              </div>
 
-              {/* Gender Field */}
-              <select
-                value={passengerDetails[index].gender}
-                onChange={(e) => handleChange(index, 'gender', e.target.value)}
-                className="block w-full mb-2 p-3 border-2 rounded-md focus:outline-none focus:border-blue-600 transition-all shadow-sm"
-                required
-              >
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-              {passengerDetails[index].errors.gender && (
-                <p className="text-red-500">{passengerDetails[index].errors.gender}</p>
-              )}
-
-              {/* Mobile Field */}
-              {renderInputField('tel', index, 'mobile', 'Mobile Number')}
+              {renderInputField('tel', index, 'mobile', 'Mobile Number', 'w-full')}
               {passengerDetails[index].errors.mobile && (
                 <p className="text-red-500">{passengerDetails[index].errors.mobile}</p>
               )}
 
-              {/* Address Field */}
               {renderInputField('text', index, 'address', 'Address')}
               {passengerDetails[index].errors.address && (
                 <p className="text-red-500">{passengerDetails[index].errors.address}</p>
@@ -191,10 +198,14 @@ const PassengerDetailsForm = () => {
 
         <button
           type="submit"
-          className="bg-indigo-600 text-white px-8 py-3 rounded-full shadow-lg hover:bg-indigo-700 hover:shadow-xl transition-transform transform hover:scale-105 active:scale-95"
+          className="bg-indigo-500 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-transform transform-gpu hover:scale-105 hover:bg-indigo-600 hover:animate-pulse focus:outline-none focus:ring-2 focus:ring-indigo-500 duration-300 flex items-center justify-center"
           disabled={!isFormValid() || isSubmitting}
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Details'}
+          {isSubmitting ? (
+            <AiOutlineLoading3Quarters className="animate-spin mr-2" />
+          ) : (
+            'Submit Details'
+          )}
         </button>
       </form>
     </div>
