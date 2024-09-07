@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { useAuth } from '../../authcontext';
+import React, { useEffect, useState } from 'react';
+import { jwtDecode } from "jwt-decode";
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'; // Import useDispatch
 import logo from '../../assets/logo.png';
 import help_logo from '../../assets/help_logo.jpg';
 import search_logo from '../../assets/search_logo.png';
@@ -8,35 +9,64 @@ import about_logo from '../../assets/about_logo.png';
 import ts_logo from '../../assets/ts_logo.png';
 import mybooking_logo from '../../assets/mybooking_logo.jpg';
 import contact_logo from '../../assets/contact_logo.jpeg';
-import { selectUser, logout} from '../../Features/Slice';
-import { useSelector, useDispatch} from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { logout } from '../../Features/Slice'; // Ensure correct path to logout action
 
-
-export default function Header( {userName="Ram"}) {
-  // const { user, logout } = useAuth();
-  // console.log('User:', user);
-  // console.log('Logout:', logout);
-  const user = useSelector(selectUser)
-  const locUser = localStorage.getItem('user')
-  console.log(locUser)
+const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const loginUser=localStorage.getItem("Username")
   
-  
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
 
+  // Function to check and handle JWT expiration
+  useEffect(() => {
+    const key = "token";
+
+    const checkTokenExpiry = () => {
+      const token = localStorage.getItem(key);
+      if (token) {
+        try {
+          const decodedToken = jwtDecode(token); // Use jwt_decode directly
+          const currentTime = new Date().getTime() / 1000; // Current time in seconds
+          console.log(decodedToken.exp);
+          console.log(currentTime);
+          console.log(loginUser);
+          
+          if (decodedToken.exp < currentTime) {
+            console.log("Jwt token expired!");
+            localStorage.removeItem(key);
+            localStorage.removeItem("Username");
+          
+            window.location.reload(); // Reload the entire page
+          }
+        } catch (error) {
+          console.log("Error in decoding the Jwt token!", error);
+          localStorage.removeItem(key);
+          window.location.reload(); // Reload the entire page
+        }
+      }
+    };
+
+    checkTokenExpiry(); // Check on mount
+
+    const interval = setInterval(() => {
+      checkTokenExpiry();
+    }, 1000); // Check every second
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [loginUser]); // Empty dependency array to run only on mount
+
+  // Handle logout
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(logout()); // Update Redux state
-    localStorage.removeItem('user'); // Clear local storage
+    localStorage.removeItem('Username'); // Clear local storage
     localStorage.removeItem('role'); // Clear role from local storage
+  
     navigate('/'); // Redirect to home page
   };
 
   return (
-    
     <header className="fixed top-0 left-0 w-full z-50">
-      
       <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
           <Link to="/" className="flex items-center">
@@ -48,17 +78,12 @@ export default function Header( {userName="Ram"}) {
               className="text-blue-800 bg-yellow-300 hover:bg-yellow-200 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none flex items-center"
             >
               <img src={mybooking_logo} alt="My Bookings Icon" className="w-5 h-5 mr-2" />
-              My Bookings 
+              My Bookings
             </Link>
-            
-            
-           { locUser ? 
-           (
+            {loginUser ? (
               <div className="flex items-center">
-                
                 <span className="text-blue-800 font-medium text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2">
-                  
-                  Welcome, {locUser}
+                  Welcome, {loginUser}
                 </span>
                 <button
                   onClick={handleLogout}
@@ -67,19 +92,14 @@ export default function Header( {userName="Ram"}) {
                   Logout
                 </button>
               </div>
-            ) : 
-            (
-              
+            ) : (
               <Link
                 to="/loginandreg"
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2"
               >
-  
                 Login / Register
               </Link>
-              
-            ) }
-          
+            )}
           </div>
           <div className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
             <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
@@ -144,4 +164,6 @@ export default function Header( {userName="Ram"}) {
       </nav>
     </header>
   );
-}
+};
+
+export default Header;

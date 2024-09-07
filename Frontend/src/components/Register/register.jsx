@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login } from '../../Features/Slice';
+import { useEffect } from 'react';
 
 export default function Register({ currUser = "" }) {
   const [isLogin, setLogin] = useState(true);
@@ -94,7 +95,7 @@ export default function Register({ currUser = "" }) {
       const token = response.data.AccessToken;
       const loginUser = response.data.name;
       const role = response.data.userType;
-
+      localStorage.setItem("Username",loginUser)
       localStorage.setItem("role", role);
       localStorage.setItem('token', token);
 
