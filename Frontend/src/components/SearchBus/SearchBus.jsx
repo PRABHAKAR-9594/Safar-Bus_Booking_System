@@ -5,10 +5,6 @@ import BusCard from '../BusCard/BusCard';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
-// Get things from localStorage
-// const Source = localStorage.getItem("Source");
-// const Destination = localStorage.getItem("Destination");
-// const Date = localStorage.getItem("Date");
 const token = localStorage.getItem("token");
 
 const api = axios.create({
@@ -19,51 +15,91 @@ const api = axios.create({
 });
 
 function BusResultsPage() {
-const Source = useSelector(state => state.filter.source)
-const Destination = useSelector(state => state.filter.destination)
-const Date = useSelector(state => state.filter.date)
-console.log(Source)
+  const Source = useSelector(state => state.filter.source);
+  const Destination = useSelector(state => state.filter.destination);
+  const Date = useSelector(state => state.filter.date);
+
   const [buses, setBuses] = useState([]);
   const [filters, setFilters] = useState({
     isAC: false,
     isNonAC: false,
     isSleeper: false,
     isSitting: false,
-    isDay:false,
-    isNight:false,
-    isFoodAvalible:false,
-    isFoodNotAvaliabe:false
+    isDay: false,
+    isNight: false,
+    isFoodAvailable: false,
+    isFoodNotAvailable: false
   });
 
   useEffect(() => {
     const fetchBusData = async () => {
       try {
         const response = await api.post('/busdata', { Source, Destination });
-        setBuses(response.data); // Update state with the fetched bus data
+        setBuses(response.data);
       } catch (error) {
         console.error('Error fetching bus data:', error);
       }
     };
 
     fetchBusData();
-  }, [Source, Destination]); // Re-run if `source` or `Destination` changes
+  }, [Source, Destination]);
 
+  const calculateTotalTime = (buses) => {
+    return buses.reduce((total, bus) => {
+      try {
+        // Ensure the Source_time and Destination_time are valid date strings
+        const sourceTimeStr = bus.Source_time;
+        const destinationTimeStr = bus.Destination_time;
+        
+        // Log the date strings for debugging
+        console.log(`Source Time String: ${sourceTimeStr}`);
+        console.log(`Destination Time String: ${destinationTimeStr}`);
+        
+        const sourceTime = new Date(sourceTimeStr);
+        const destinationTime = new Date(destinationTimeStr);
+  
+        // Check for invalid dates
+        if (isNaN(sourceTime) || isNaN(destinationTime)) {
+          console.warn(`Invalid date encountered: ${sourceTimeStr} or ${destinationTimeStr}`);
+          return total;
+        }
+  
+        const travelTime = (destinationTime - sourceTime) / (1000 * 60 * 60); // Convert milliseconds to hours
+        return total + travelTime;
+      } catch (error) {
+        console.error('Error calculating travel time:', error);
+        return total;
+      }
+    }, 0);
+  };
 
-  // Filter logic
   const filteredBuses = buses.filter((bus) => {
-    return (
-      (!filters.isAC || bus.Bus_type === 'AC') &&
-      (!filters.isNonAC || bus.Bus_type === 'Non-AC') &&
-      (!filters.isSleeper || bus.Bus_Class === 'Sleeper') &&
-      (!filters.isDay || bus.Timing === 'Day') &&
-      (!filters.isNight || bus.Timing === 'Sittingz') &&
-      (!filters.isSitting || bus.Bus_Class === 'Sitting') &&
-      (!filters.isSitting || bus.Bus_Class === 'Sitting')
+    const matchesAC = filters.isAC && bus.Bus_type === 'AC';
+    const matchesNonAC = filters.isNonAC && bus.Bus_type === 'Non-AC';
+    const matchesACOrNonAC = (!filters.isAC && !filters.isNonAC) || matchesAC || matchesNonAC;
 
+    const matchesSleeper = filters.isSleeper && bus.Bus_Class === 'Sleeper';
+    const matchesSitting = filters.isSitting && bus.Bus_Class === 'Sitting';
+    const matchesSleeperorSitting = (!filters.isSleeper && !filters.isSitting) || matchesSleeper || matchesSitting;
+
+    const matchesDay = filters.isDay && bus.Timing === 'Day';
+    const matchesNight = filters.isNight && bus.Timing === 'Night';
+    const matchesDayorNight = (!filters.isDay && !filters.isNight) || matchesDay || matchesNight;
+
+    const matchesFoodAvailable = filters.isFoodAvailable && bus.Food_Facility === 'Available';
+    const matchesFoodNotAvailable = filters.isFoodNotAvailable && bus.Food_Facility === 'Not Available';
+    const matchesFoodAvailableOrNot = (!filters.isFoodAvailable && !filters.isFoodNotAvailable) || matchesFoodAvailable || matchesFoodNotAvailable;
+
+    return (
+      matchesACOrNonAC &&
+      matchesSleeperorSitting &&
+      matchesFoodAvailableOrNot &&
+      matchesDayorNight
     );
   });
 
-  // Inline styles to hide vertical scrollbar
+  const totalTravelTime = calculateTotalTime(filteredBuses);
+
   const hideScrollbarStyle = {
     overflowY: 'scroll',
     scrollbarWidth: 'none', // For Firefox
@@ -75,11 +111,9 @@ console.log(Source)
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-purple-300 to-blue-400 p-2">
-      {/* Top Bar */}
       <TopBar source={Source} destination={Destination} date={Date} />
 
-      <div className="flex mt-32 h-[calc(100vh-64px)]"> {/* Adjust the height according to the header height */}
-        {/* Left Section (Filters) */}
+      <div className="flex mt-32 h-[calc(100vh-64px)]">
         <div className="w-1/4 pr-4 relative h-full">
           <div 
             style={{ ...hideScrollbarStyle, ...hideScrollbarWebkit }}
@@ -89,14 +123,20 @@ console.log(Source)
           </div>
         </div>
 
-        {/* Right Section (Bus Cards) */}
         <div 
           className="w-3/4 flex flex-col space-y-4"
           style={{ ...hideScrollbarStyle, ...hideScrollbarWebkit }}
         >
-          {filteredBuses.map((bus) => (
-            <BusCard key={bus._id} bus={bus} />
-          ))}
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">Total Travel Time: {totalTravelTime.toFixed(2)} hours</h3>
+          </div>
+          {filteredBuses.length > 0 ? (
+            filteredBuses.map((bus) => (
+              <BusCard key={bus._id} bus={bus} />
+            ))
+          ) : (
+            <div>No buses match the selected filters</div>
+          )}
         </div>
       </div>
     </div>

@@ -27,9 +27,7 @@ const Header = () => {
         try {
           const decodedToken = jwtDecode(token); // Use jwt_decode directly
           const currentTime = new Date().getTime() / 1000; // Current time in seconds
-          console.log(decodedToken.exp);
-          console.log(currentTime);
-          console.log(loginUser);
+        
           
           if (decodedToken.exp < currentTime) {
             console.log("Jwt token expired!");

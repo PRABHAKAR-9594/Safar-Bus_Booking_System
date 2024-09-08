@@ -62,7 +62,7 @@ function BusCard({ bus }) {
       <div className="flex justify-between items-center text-md">
         <div className="flex-1 flex items-center">
           <FaClock className="inline text-yellow-500 mr-1 text-xl" />
-          <span className="font-semibold text-indigo-700">Total Time: {bus.totalTime}</span>
+          <span className="font-semibold text-indigo-700">Total Time: {bus.Destination_time - bus.Source_time}</span>
         </div>
         <div className="flex-1 text-center font-semibold">
           <span className={`font-semibold text-md ${bus.Bus_type === 'AC' ? 'text-green-600' : 'text-red-600'}`}>

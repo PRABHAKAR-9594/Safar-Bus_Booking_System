@@ -17,7 +17,8 @@ function FilterOptions({ filters, setFilters }) {
       isSitting: false,
       isDay: false,
       isNight: false,
-      foodFacility: false,
+      isFoodAvailable: false,
+      isFoodNotAvailable: false
     });
   };
 
@@ -115,12 +116,23 @@ function FilterOptions({ filters, setFilters }) {
         <label className="flex items-center text-gray-700">
           <input
             type="checkbox"
-            name="foodFacility"
-            checked={filters.foodFacility}
+            name="isFoodAvailable"
+            checked={filters.isFoodAvailable}
             onChange={handleCheckboxChange}
             className="form-checkbox h-5 w-5 text-blue-600 border-gray-300"
           />
           <span className="ml-3 text-lg">Available</span>
+        </label>
+
+        <label className="flex items-center text-gray-700">
+          <input
+            type="checkbox"
+            name="isFoodNotAvailable"
+            checked={filters.isFoodNotAvailable}
+            onChange={handleCheckboxChange}
+            className="form-checkbox h-5 w-5 text-blue-600 border-gray-300"
+          />
+          <span className="ml-3 text-lg">Not Available</span>
         </label>
       </div>
     </div>
