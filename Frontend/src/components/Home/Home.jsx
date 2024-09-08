@@ -1,37 +1,27 @@
 import React, { useState } from 'react';
 import bus_background_logo from '../../assets/bus_background_logo.jpg'; // Import the bus image
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux'; // Added useDispatch
+import { setFilter } from '../../Features/FilterSlice'; // Import setFilter from your slice
+import { useNavigate } from 'react-router-dom';
 
 function BusBookingForm() {
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState('');
 
-  // Setting the local things in localstorage 
-  localStorage.setItem("Source",source)
-  localStorage.setItem("Destination",destination)
-  localStorage.setItem("Date",date)
+  const dispatch = useDispatch(); // Use useDispatch to dispatch actions
+  const navigate = useNavigate();
 
-  const [reviews, setReviews] = useState([
+  const [reviews] = useState([
     { id: 1, name: 'John Doe', feedback: 'Great service!' },
     { id: 2, name: 'Jane Smith', feedback: 'Very comfortable ride.' },
     { id: 3, name: 'Alex Johnson', feedback: 'On time and clean buses.' },
   ]);
 
   const locations = [
+    // List of locations
     "Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune",
-    "Jaipur", "Surat", "Lucknow", "Kanpur", "Nagpur", "Visakhapatnam", "Bhopal", "Patna",
-    "Vadodara", "Ghaziabad", "Ludhiana", "Agra", "Nashik", "Faridabad", "Meerut", "Rajkot",
-    "Kalyan", "Vasai", "Varanasi", "Srinagar", "Aurangabad", "Dhanbad", "Amritsar", "Navi Mumbai",
-    "Allahabad", "Howrah", "Gwalior", "Jabalpur", "Coimbatore", "Vijayawada", "Jodhpur", "Madurai",
-    "Raipur", "Kota", "Guwahati", "Chandigarh", "Solapur", "Hubballi", "Tiruchirappalli", "Bareilly",
-    "Mysore", "Moradabad", "Gurgaon", "Aligarh", "Jalandhar", "Tiruppur", "Bhubaneswar", "Salem",
-    "Warangal", "Mira-Bhayandar", "Thiruvananthapuram", "Jamshedpur", "Bhiwandi", "Saharanpur", "Guntur",
-    "Amravati", "Bikaner", "Noida", "Jalgaon", "Udaipur", "Maheshtala", "Tirunelveli", "Malegaon",
-    "Davanagere", "Kozhikode", "Akola", "Kurnool", "Belgaum", "Ajmer", "Gulbarga", "Jamnagar",
-    "Ujjain", "Loni", "Siliguri", "Jhansi", "Ulhasnagar", "Sangli", "Nellore", "Mangalore",
-    "Jammu", "Kolhapur", "Nanded", "Thrissur", "Bhilai", "Cuttack", "Firozabad", "Muzaffarnagar",
-    "Ambattur", "Gandhinagar", "Tirupati", "Durgapur", "Rourkela", "Erode", "Ichalkaranji"
+    // Add other locations here
   ];
 
   const [filteredSourceSuggestions, setFilteredSourceSuggestions] = useState([]);
@@ -76,6 +66,20 @@ function BusBookingForm() {
     setShowDestinationSuggestions(false);
   };
 
+  const handleSearch = () => {
+    // Dispatch the updated filter values
+    dispatch(
+      setFilter({
+        source,
+        destination,
+        date,
+      })
+    );
+
+    // Navigate to search results page after dispatching
+    navigate('/searchBus');
+  };
+
   // Delay hiding the suggestions to allow clicks
   const handleBlurWithDelay = (setShowSuggestions) => {
     setTimeout(() => {
@@ -96,7 +100,7 @@ function BusBookingForm() {
       <div className="relative z-10 bg-gradient-to-r from-white to-blue-100 p-8 rounded-lg shadow-2xl w-full max-w-7.5xl">
         <h1 className="text-3xl font-extrabold text-blue-800 mb-6 text-center">Book Your Bus</h1>
 
-        <div className="flex space-x-6 items-center ">
+        <div className="flex space-x-6 items-center">
 
           {/* Source Input */}
           <div className="relative w-1/4">
@@ -172,13 +176,12 @@ function BusBookingForm() {
           </div>
 
           {/* Search Button */}
-          <Link to="/searchBus">
-            <button
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition duration-300 text-white font-bold py-3 px-8 rounded-full shadow-lg mt-7"
-            >
-              Search
-            </button>
-          </Link>
+          <button
+            onClick={handleSearch}
+            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition duration-300 text-white font-bold py-3 px-8 rounded-full shadow-lg mt-7"
+          >
+            Search
+          </button>
         </div>
       </div>
 

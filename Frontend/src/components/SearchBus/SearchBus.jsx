@@ -3,11 +3,12 @@ import TopBar from '../BusTopbar/BusTopbar';
 import FilterOptions from '../BusFilter/BusFilter';
 import BusCard from '../BusCard/BusCard';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 // Get things from localStorage
-const Source = localStorage.getItem("Source");
-const Destination = localStorage.getItem("Destination");
-const Date = localStorage.getItem("Date");
+// const Source = localStorage.getItem("Source");
+// const Destination = localStorage.getItem("Destination");
+// const Date = localStorage.getItem("Date");
 const token = localStorage.getItem("token");
 
 const api = axios.create({
@@ -18,6 +19,10 @@ const api = axios.create({
 });
 
 function BusResultsPage() {
+const Source = useSelector(state => state.filter.source)
+const Destination = useSelector(state => state.filter.destination)
+const Date = useSelector(state => state.filter.date)
+console.log(Source)
   const [buses, setBuses] = useState([]);
   const [filters, setFilters] = useState({
     isAC: false,
@@ -42,6 +47,7 @@ function BusResultsPage() {
 
     fetchBusData();
   }, [Source, Destination]); // Re-run if `source` or `Destination` changes
+
 
   // Filter logic
   const filteredBuses = buses.filter((bus) => {
