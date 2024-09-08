@@ -2,25 +2,11 @@ import React from 'react';
 
 function FilterOptions({ filters, setFilters }) {
   const handleCheckboxChange = (e) => {
-    const { name, checked, value } = e.target;
-
-    if (name === 'timing') {
-      setFilters((prevFilters) => {
-        const newTiming = checked
-          ? [...(prevFilters.timing || []), value]
-          : (prevFilters.timing || []).filter((item) => item !== value);
-
-        return {
-          ...prevFilters,
-          timing: newTiming,
-        };
-      });
-    } else {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: checked,
-      }));
-    }
+    const { name, checked } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: checked,
+    }));
   };
 
   const handleClearFilters = () => {
@@ -29,7 +15,8 @@ function FilterOptions({ filters, setFilters }) {
       isNonAC: false,
       isSleeper: false,
       isSitting: false,
-      timing: [],
+      isDay: false,
+      isNight: false,
       foodFacility: false,
     });
   };
@@ -103,9 +90,8 @@ function FilterOptions({ filters, setFilters }) {
           <label className="flex items-center text-gray-700">
             <input
               type="checkbox"
-              name="timing"
-              value="Day"
-              checked={(filters.timing || []).includes('Day')}
+              name="isDay"
+              checked={filters.isDay}
               onChange={handleCheckboxChange}
               className="form-checkbox h-5 w-5 text-blue-600 border-gray-300"
             />
@@ -114,9 +100,8 @@ function FilterOptions({ filters, setFilters }) {
           <label className="flex items-center text-gray-700">
             <input
               type="checkbox"
-              name="timing"
-              value="Night"
-              checked={(filters.timing || []).includes('Night')}
+              name="isNight"
+              checked={filters.isNight}
               onChange={handleCheckboxChange}
               className="form-checkbox h-5 w-5 text-blue-600 border-gray-300"
             />

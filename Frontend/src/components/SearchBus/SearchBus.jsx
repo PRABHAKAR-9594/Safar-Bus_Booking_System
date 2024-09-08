@@ -1,115 +1,76 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TopBar from '../BusTopbar/BusTopbar';
 import FilterOptions from '../BusFilter/BusFilter';
 import BusCard from '../BusCard/BusCard';
+import axios from 'axios';
 
+// Get things from localStorage
+const Source = localStorage.getItem("Source");
+const Destination = localStorage.getItem("Destination");
+const Date = localStorage.getItem("Date");
+const token = localStorage.getItem("token");
 
-// Inline styles to hide vertical scrollbar
-const hideScrollbarStyle = {
-  overflowY: 'scroll',
-  scrollbarWidth: 'none', // For Firefox
-};
-
-const hideScrollbarWebkit = {
-  overflowY: 'scroll',
-};
+const api = axios.create({
+  baseURL: 'http://localhost:8080',
+  headers: {
+    'x-access-token': token,
+  },
+});
 
 function BusResultsPage() {
-  // Sample data for buses
-  const [buses, setBuses] = useState([
-    {
-      name: 'Express Line',
-      number: 'EXP123',
-      isAC: false,
-      classType: 'Sitting',
-      source: 'Mumbai',
-      destination: 'Pune',
-      sourceTime: '10:00 AM',
-      destinationTime: '2:00 PM',
-      totalTime: '4 hrs',
-      price: 500,
-      seatsAvailable: 20
-    },
-
-    {
-      name: 'Express Line',
-      number: 'EXP123',
-      isAC: false,
-      classType: 'Sitting',
-      source: 'Mumbai',
-      destination: 'Pune',
-      sourceTime: '10:00 AM',
-      destinationTime: '2:00 PM',
-      totalTime: '4 hrs',
-      price: 500,
-      seatsAvailable: 20
-    },
-
-    {
-      name: 'Express Line',
-      number: 'EXP123',
-      isAC: false,
-      classType: 'Sitting',
-      source: 'Mumbai',
-      destination: 'Pune',
-      sourceTime: '10:00 AM',
-      destinationTime: '2:00 PM',
-      totalTime: '4 hrs',
-      price: 500,
-      seatsAvailable: 20
-    },
-
-    {
-      name: 'Express Line',
-      number: 'EXP123',
-      isAC: false,
-      classType: 'Sitting',
-      source: 'Mumbai',
-      destination: 'Pune',
-      sourceTime: '10:00 AM',
-      destinationTime: '2:00 PM',
-      totalTime: '4 hrs',
-      price: 500,
-      seatsAvailable: 20
-    },
-
-    {
-      name: 'Express Line',
-      number: 'EXP123',
-      isAC: false,
-      classType: 'Sitting',
-      source: 'Mumbai',
-      destination: 'Pune',
-      sourceTime: '10:00 AM',
-      destinationTime: '2:00 PM',
-      totalTime: '4 hrs',
-      price: 500,
-      seatsAvailable: 20
-    },
-    // Add more buses as needed
-  ]);
-
+  const [buses, setBuses] = useState([]);
   const [filters, setFilters] = useState({
     isAC: false,
     isNonAC: false,
     isSleeper: false,
     isSitting: false,
+    isDay:false,
+    isNight:false,
+    isFoodAvalible:false,
+    isFoodNotAvaliabe:false
   });
+
+  useEffect(() => {
+    const fetchBusData = async () => {
+      try {
+        const response = await api.post('/busdata', { Source, Destination });
+        setBuses(response.data); // Update state with the fetched bus data
+      } catch (error) {
+        console.error('Error fetching bus data:', error);
+      }
+    };
+
+    fetchBusData();
+  }, [Source, Destination]); // Re-run if `source` or `Destination` changes
 
   // Filter logic
   const filteredBuses = buses.filter((bus) => {
     return (
-      (!filters.isAC || bus.isAC) &&
-      (!filters.isNonAC || !bus.isAC) &&
-      (!filters.isSleeper || bus.classType === 'Sleeper') &&
-      (!filters.isSitting || bus.classType === 'Sitting')
+      (!filters.isAC || bus.Bus_type === 'AC') &&
+      (!filters.isNonAC || bus.Bus_type === 'Non-AC') &&
+      (!filters.isSleeper || bus.Bus_Class === 'Sleeper') &&
+      (!filters.isDay || bus.Timing === 'Day') &&
+      (!filters.isNight || bus.Timing === 'Sittingz') &&
+      (!filters.isSitting || bus.Bus_Class === 'Sitting') &&
+      (!filters.isSitting || bus.Bus_Class === 'Sitting')
+
     );
   });
+
+  // Inline styles to hide vertical scrollbar
+  const hideScrollbarStyle = {
+    overflowY: 'scroll',
+    scrollbarWidth: 'none', // For Firefox
+  };
+
+  const hideScrollbarWebkit = {
+    overflowY: 'scroll',
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-purple-300 to-blue-400 p-2">
       {/* Top Bar */}
-      <TopBar source="Mumbai" destination="Pune" date="2024-09-01" />
+      <TopBar source={Source} destination={Destination} date={Date} />
 
       <div className="flex mt-32 h-[calc(100vh-64px)]"> {/* Adjust the height according to the header height */}
         {/* Left Section (Filters) */}
@@ -127,8 +88,8 @@ function BusResultsPage() {
           className="w-3/4 flex flex-col space-y-4"
           style={{ ...hideScrollbarStyle, ...hideScrollbarWebkit }}
         >
-          {filteredBuses.map((bus, index) => (
-            <BusCard key={index} bus={bus} />
+          {filteredBuses.map((bus) => (
+            <BusCard key={bus._id} bus={bus} />
           ))}
         </div>
       </div>
