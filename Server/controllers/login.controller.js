@@ -5,11 +5,11 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 export const login = async (req, res) => {
     try {
-        const { email, password, userType} = req.body;
+        const { email, password} = req.body;
 
         // Find the user by email
         
-        const user = await reg_model.findOne({ email , userType });
+        const user = await reg_model.findOne({ email});
 
         if (!user) {
             return res.status(400).json({ error: 'This is not a valid user !' });

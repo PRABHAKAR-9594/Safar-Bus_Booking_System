@@ -9,6 +9,10 @@ function BusBookingForm() {
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState('');
 
+  const [sourceError, setSourceError] = useState(''); // Error state for source
+  const [destinationError, setDestinationError] = useState(''); // Error state for destination
+  const [dateError, setDateError] = useState(''); // Error state for date
+
   const dispatch = useDispatch(); // Use useDispatch to dispatch actions
   const navigate = useNavigate();
 
@@ -67,18 +71,56 @@ function BusBookingForm() {
   };
 
   const handleSearch = () => {
-    // Dispatch the updated filter values
-    dispatch(
-      setFilter({
-        source,
-        destination,
-        date,
-      })
-    );
+    let valid = true;
 
-    // Navigate to search results page after dispatching
-    navigate('/searchBus');
+    // Reset errors
+    setSourceError('');
+    setDestinationError('');
+    setDateError('');
+
+    // Validate source
+    if (!source) {
+      setSourceError('Source is required');
+      valid = false;
+    } else if (!locations.includes(source)) {
+      setSourceError('Source must be selected from the list');
+      valid = false;
+    }
+
+    // Validate destination
+    if (!destination) {
+      setDestinationError('Destination is required');
+      valid = false;
+    } else if (!locations.includes(destination)) {
+      setDestinationError('Destination must be selected from the list');
+      valid = false;
+    }
+
+    // Validate date
+    if (!date) {
+      setDateError('Date is required');
+      valid = false;
+    }
+
+    // If all fields are valid, proceed to search
+    if (valid) {
+      // Dispatch the updated filter values
+      dispatch(
+        setFilter({
+          source,
+          destination,
+          date,
+        })
+      );
+      navigate('/searchBus');
+    }
   };
+
+  // Restrict the date input
+  const today = new Date().toISOString().split('T')[0];
+  const oneMonthAhead = new Date();
+  oneMonthAhead.setMonth(oneMonthAhead.getMonth() + 1);
+  const maxDate = oneMonthAhead.toISOString().split('T')[0];
 
   // Delay hiding the suggestions to allow clicks
   const handleBlurWithDelay = (setShowSuggestions) => {
@@ -88,16 +130,14 @@ function BusBookingForm() {
   };
 
   return (
-    <div
-      className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-purple-300 to-blue-400 p-6"
-    >
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-purple-300 to-blue-400 p-6">
       <div
         className="absolute inset-0 bg-cover bg-center opacity-40"
         style={{ backgroundImage: `url(${bus_background_logo})` }}
         aria-hidden="true"
       ></div>
 
-      <div className="relative z-10 bg-gradient-to-r from-white to-blue-100 p-8 rounded-lg shadow-2xl w-full max-w-7.5xl">
+      <div className="relative z-20 bg-gradient-to-r from-white to-blue-100 p-8 rounded-lg shadow-2xl w-full max-w-7.5xl">
         <h1 className="text-3xl font-extrabold text-blue-800 mb-6 text-center">Book Your Bus</h1>
 
         <div className="flex space-x-6 items-center">
@@ -115,7 +155,7 @@ function BusBookingForm() {
               className="w-full px-4 py-3 text-lg rounded-lg border-2 border-blue-300 focus:outline-none focus:border-purple-500 shadow-md bg-white"
             />
             {showSourceSuggestions && filteredSourceSuggestions.length > 0 && (
-              <ul className="absolute z-50 bg-white border border-gray-300 w-full mt-1 rounded-lg shadow-md max-h-40 overflow-y-auto">
+              <ul className="absolute z-30 bg-white border border-gray-300 w-full mt-1 rounded-lg shadow-md max-h-40 overflow-y-auto">
                 {filteredSourceSuggestions.map((suggestion, index) => (
                   <li
                     key={index}
@@ -127,6 +167,7 @@ function BusBookingForm() {
                 ))}
               </ul>
             )}
+            {sourceError && <p className="text-red-500 text-sm mt-1">{sourceError}</p>}
           </div>
 
           {/* Swap Button */}
@@ -150,7 +191,7 @@ function BusBookingForm() {
               className="w-full px-4 py-3 text-lg rounded-lg border-2 border-blue-300 focus:outline-none focus:border-purple-500 shadow-md bg-white"
             />
             {showDestinationSuggestions && filteredDestinationSuggestions.length > 0 && (
-              <ul className="absolute z-50 bg-white border border-gray-300 w-full mt-1 rounded-lg shadow-md max-h-40 overflow-y-auto">
+              <ul className="absolute z-30 bg-white border border-gray-300 w-full mt-1 rounded-lg shadow-md max-h-40 overflow-y-auto">
                 {filteredDestinationSuggestions.map((suggestion, index) => (
                   <li
                     key={index}
@@ -162,6 +203,7 @@ function BusBookingForm() {
                 ))}
               </ul>
             )}
+            {destinationError && <p className="text-red-500 text-sm mt-1">{destinationError}</p>}
           </div>
 
           {/* Date Input */}
@@ -171,12 +213,15 @@ function BusBookingForm() {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              min={today}
+              max={maxDate}
               className="w-full px-4 py-3 text-lg rounded-lg border-2 border-blue-300 focus:outline-none focus:border-purple-500 shadow-md bg-white"
             />
+            {dateError && <p className="text-red-500 text-sm mt-1">{dateError}</p>}
           </div>
 
           {/* Search Button */}
-          <button
+           <button
             onClick={handleSearch}
             className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition duration-300 text-white font-bold py-3 px-8 rounded-full shadow-lg mt-7"
           >
@@ -184,9 +229,8 @@ function BusBookingForm() {
           </button>
         </div>
       </div>
-
-      {/* Customer Reviews */}
-      <div className="relative z-10 mt-10 w-full max-w-xl">
+     {/* Customer Reviews */}
+     <div className="relative z-10 mt-10 w-full max-w-xl">
         <h2 className="text-2xl font-bold text-blue-800 mb-4 text-center">Customer Reviews</h2>
         <div className="flex space-x-4 animate-slide-in justify-center">
           {reviews.map((review) => (

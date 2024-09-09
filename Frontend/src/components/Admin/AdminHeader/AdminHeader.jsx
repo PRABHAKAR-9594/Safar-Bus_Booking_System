@@ -21,6 +21,7 @@ const navigate = useNavigate()
     e.preventDefault()
     dispatch(logout())
     localStorage.removeItem("role")
+    localStorage.removeItem("Username")
     navigate("/")
   }
     return (

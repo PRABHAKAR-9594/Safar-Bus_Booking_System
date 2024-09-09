@@ -31,11 +31,12 @@ import FormPage from './components/FormPage/FormPage.jsx'
 import Payment from './components/Payment/PaymentMethod.jsx'
 import Receipt from './components/Receipt/Receipt.jsx'
 
-
-
+const role = localStorage.getItem("role")
 
 const router = createBrowserRouter(
  
+  
+
   createRoutesFromElements(
     <>
     <Route path='/' element={<Layout />}>
@@ -44,26 +45,13 @@ const router = createBrowserRouter(
       <Route path='status' element={<Status />} />
       <Route path='contact' element={<Contact />} />
       <Route path='help' element={<Help />} />
-
-      
-      
-
-      <Route path='admin' element={ <AdminLayout/>} >
-      <Route path='' element={<AdminHome />} />
-      <Route path='addbus' element={<AddBus />} />
-      <Route path='deletebus' element={<DeleteBus />} />
-      <Route path='viewrevenue' element={<ViewRevenue />} />
-      <Route path='viewbookings' element={<ViewBookings />} />
-      <Route path='handlecomplaints' element={<HandleComplaints />} />
-      <Route path='modifybus' element={<ModifyBus />} />
-
       </Route>
+
       <Route path='user/:userid' element={<User />} />
       <Route path='loginandreg' element={<Register/>} />
       <Route path='ForgetPassword' element={<ForgetPassword/>} />
-   
-       
-    </Route>
+
+      
     <Route path='searchBus' element={<SearchBusLayout />}>
       <Route path='' element={<SearchBus />} />
       <Route path='viewSeats' element={<ViewSeats />} />
@@ -72,6 +60,17 @@ const router = createBrowserRouter(
       <Route path='viewSeats/Form/payment/receipt' element={<Receipt/>} />
       </Route>
     
+    <Route path='admin' element={ <AdminLayout/>} >
+      <Route path='' element={<AdminHome />} />
+      <Route path='addbus' element={<AddBus />} />
+      <Route path='deletebus' element={<DeleteBus />} />
+      <Route path='viewrevenue' element={<ViewRevenue />} />
+      <Route path='viewbookings' element={<ViewBookings />} />
+      <Route path='handlecomplaints' element={<HandleComplaints />} />
+      <Route path='modifybus' element={<ModifyBus />} />
+      </Route>
+
+      <Route path='*' element={<PageNotFound />} />
     </>
   )
 )

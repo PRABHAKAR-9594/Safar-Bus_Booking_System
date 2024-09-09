@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function Contact() {
+    const [alert, setAlert] = useState({ message: '', type: '', countdown: 5 });
+    const [countdown, setCountdown] = useState(5);
     const [message, setMessage] = useState({
-        Bus_number:'',
+        Bus_number: '',
+        name: '',
+        email: '',
+        contact_number: '',
+        message: ''
+    });
+    const [validation, setValidation] = useState({
+        Bus_number: '',
         name: '',
         email: '',
         contact_number: '',
@@ -15,47 +24,148 @@ export default function Contact() {
     const api = axios.create({
         baseURL: 'http://localhost:8080',
         headers: {
-            'x-access-token': token  // or 'Authorization': `Bearer ${token}`
+            'x-access-token': token
         }
     });
 
+    const validateInput = (name, value) => {
+        let error = '';
+        switch (name) {
+            case 'Bus_number':
+                if (value.trim() === '') {
+                    error = 'Bus number is required';
+                } else if (!/^\d+$/.test(value)) {
+                    error = 'Bus number must be numeric';
+                }
+                break;
+            case 'name':
+                if (value.trim() === '') {
+                    error = 'Name is required';
+                } else if (/\d/.test(value)) {
+                    error = 'Name cannot contain numbers';
+                }
+                break;
+            case 'email':
+                if (value.trim() === '') {
+                    error = 'Email is required';
+                } else if (!/\S+@\S+\.\S+/.test(value)) {
+                    error = 'Email is invalid';
+                }
+                break;
+            case 'contact_number':
+                if (value.trim() === '') {
+                    error = 'Contact number is required';
+                } else if (!/^\d{10}$/.test(value)) {
+                    error = 'Contact number must be a 10-digit number';
+                }
+                break;
+            case 'message':
+                if (value.trim() === '') {
+                    error = 'Message is required';
+                }
+                break;
+            default:
+                break;
+        }
+        return error;
+    };
+
     const handleChange = (e) => {
-        
+        const { name, value } = e.target;
         setMessage({
             ...message,
-            [e.target.name]: e.target.value
+            [name]: value
+        });
+
+        const error = validateInput(name, value);
+        setValidation({
+            ...validation,
+            [name]: error
         });
     };
 
     const handleMessageSubmit = async (e) => {
         e.preventDefault();
+
+        const role = localStorage.getItem("role");
+        
+        if (role !== 'PASSENGER') {
+            setAlert({ message: "Please Login First", type: 'info', countdown: 5 });
+            setCountdown(5);
+           
+        }else{
+
+        // Check if there are any validation errors
+        const errors = Object.keys(message).reduce((acc, key) => {
+            const error = validateInput(key, message[key]);
+            if (error) acc[key] = error;
+            return acc;
+        }, {});
+
+        if (Object.keys(errors).length > 0) {
+            setValidation(errors);
+            return;
+        }
+        
+        
         try {
             const response = await api.post('/contact', message);
             console.log(response.data);
-            alert("We will contact you soon!");
-            console.log(response.status);
-    
+            setAlert({ message: "We Will Contact You Soon !", type: 'success', countdown: 5 });
+            setCountdown(5);
+
         } catch (error) {
             console.log("Error while sending!", error);
-            if (error.response) {  // Check if the error response exists
+            if (error.response) {
                 const status = error.response.status;
                 if (status === 400) {
-                    alert("Bus Number Not Valid!");
+                    setAlert({ message: "Bus Number Not Exists", type: 'error', countdown: 5 });
+                    setCountdown(5);
                 } else if (status === 403) {
-                    alert("Login First!");
+                    setAlert({ message: "Please Login First", type: 'error', countdown: 5 });
+                    setCountdown(5);
                 }
             } else {
-                alert("An error occurred. Please try again.");
+                setAlert({ message: "An Error Occurred", type: 'error', countdown: 5 });
+                    setCountdown(5);
             }
-        }
+        }}
     };
-    
+
+    useEffect(() => {
+        if (alert.message) {
+            const interval = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+            }, 1000);
+
+            const timeout = setTimeout(() => {
+                setAlert({ message: '', type: '', countdown: 5 });
+            }, 5000);
+
+            return () => {
+                clearInterval(interval);
+                clearTimeout(timeout);
+            };
+        }
+    }, [alert.message]);
 
     return (
         <div className="relative flex items-top justify-center min-h-screen bg-gray-100 sm:items-center sm:pt-8">
             <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
-                <div className="mt-20 overflow-hidden">
+                <div className="mt-12 overflow-hidden">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        {/* Alert Message in the top-right corner with countdown */}
+                        {alert.message && (
+                            <div
+                                className={`absolute top-20 right-4 p-4 text-sm text-white rounded-lg shadow-lg transition-opacity duration-300 ${alert.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+                                    }`}
+                                role="alert"
+                            >
+                                {alert.message} — Disappearing in {countdown} seconds
+                            </div>
+                        )}
+
                         {/* Contact Info Section */}
                         <div className="p-6 bg-white shadow-md sm:rounded-lg flex flex-col space-y-6">
                             <h1 className="text-2xl sm:text-3xl text-blue-900 font-extrabold tracking-tight">
@@ -133,29 +243,7 @@ export default function Contact() {
                                     />
                                 </svg>
                                 <div className="ml-4 text-md tracking-wide font-semibold">
-                                    bolbhai@suvidha.com
-                                </div>
-                            </div>
-
-                            <div className="flex items-center text-gray-700">
-                                <svg
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="1.5"
-                                    viewBox="0 0 24 24"
-                                    className="w-8 h-8 text-blue-600"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="1.5"
-                                        d="M4 6h16a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z"
-                                    />
-                                </svg>
-                                <div className="ml-4 text-md tracking-wide font-semibold">
-                                    Visit our office
+                                    info@example.com
                                 </div>
                             </div>
                         </div>
@@ -163,32 +251,50 @@ export default function Contact() {
                         {/* Contact Form Section */}
                         <form className="p-6 bg-white shadow-md sm:rounded-lg flex flex-col space-y-4" onSubmit={handleMessageSubmit}>
                             <div className="flex flex-col">
-                                <label htmlFor="name" className="hidden">
+                                <label htmlFor="Bus_number" className="hidden">
                                     Bus Number
                                 </label>
                                 <input
                                     type="text"
                                     name="Bus_number"
-                                    id="name"
                                     value={message.Bus_number}
                                     onChange={handleChange}
+                                    onKeyDown={(e) => {
+                                        // Allow only numeric keys, backspace, and arrow keys
+                                        if (!/[\d]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+                                            e.preventDefault();
+                                        }
+                                    }}
                                     placeholder="Bus Number"
                                     className="w-full mt-2 py-3 px-4 rounded-lg bg-gray-100 border border-gray-300 text-gray-800 font-semibold focus:border-blue-500 focus:outline-none"
                                 />
+                                {validation.Bus_number && (
+                                    <span className="text-red-500 text-sm">{validation.Bus_number}</span>
+                                )}
                             </div>
+
                             <div className="flex flex-col">
-                                <label htmlFor="name" className="hidden">
-                                    Full Name
-                                </label>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    id="name"
-                                    value={message.name}
-                                    onChange={handleChange}
-                                    placeholder="Full Name"
-                                    className="w-full mt-2 py-3 px-4 rounded-lg bg-gray-100 border border-gray-300 text-gray-800 font-semibold focus:border-blue-500 focus:outline-none"
-                                />
+                            <label htmlFor="name" className="hidden">
+    Full Name
+</label>
+<input
+    type="text"
+    name="name"
+    value={message.name}
+    onChange={handleChange}
+    onKeyDown={(e) => {
+        // Allow only alphabetic characters, backspace, and space
+        if (!/[a-zA-Z\s]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+            e.preventDefault();
+        }
+    }}
+    placeholder="Full Name"
+    className="w-full mt-2 py-3 px-4 rounded-lg bg-gray-100 border border-gray-300 text-gray-800 font-semibold focus:border-blue-500 focus:outline-none"
+/>
+{validation.name && (
+    <span className="text-red-500 text-sm">{validation.name}</span>
+)}
+
                             </div>
 
                             <div className="flex flex-col">
@@ -200,25 +306,35 @@ export default function Contact() {
                                     name="email"
                                     value={message.email}
                                     onChange={handleChange}
-                                    id="email"
                                     placeholder="Email"
                                     className="w-full mt-2 py-3 px-4 rounded-lg bg-gray-100 border border-gray-300 text-gray-800 font-semibold focus:border-blue-500 focus:outline-none"
                                 />
+                                {validation.email && (
+                                    <span className="text-red-500 text-sm">{validation.email}</span>
+                                )}
                             </div>
 
                             <div className="flex flex-col">
-                                <label htmlFor="tel" className="hidden">
-                                    Number
+                                <label htmlFor="contact_number" className="hidden">
+                                    Contact Number
                                 </label>
                                 <input
                                     type="tel"
                                     name="contact_number"
-                                    id="tel"
                                     value={message.contact_number}
                                     onChange={handleChange}
-                                    placeholder="Telephone Number"
+                                    onKeyDown={(e) => {
+                                        // Allow only numeric keys, backspace, and arrow keys
+                                        if (!/[\d]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                    placeholder="Contact Number"
                                     className="w-full mt-2 py-3 px-4 rounded-lg bg-gray-100 border border-gray-300 text-gray-800 font-semibold focus:border-blue-500 focus:outline-none"
                                 />
+                                {validation.contact_number && (
+                                    <span className="text-red-500 text-sm">{validation.contact_number}</span>
+                                )}
                             </div>
 
                             <div className="flex flex-col">
@@ -227,13 +343,15 @@ export default function Contact() {
                                 </label>
                                 <textarea
                                     name="message"
-                                    id="message"
                                     value={message.message}
                                     onChange={handleChange}
                                     placeholder="Your Message"
                                     className="w-full mt-2 py-3 px-4 rounded-lg bg-gray-100 border border-gray-300 text-gray-800 font-semibold focus:border-blue-500 focus:outline-none"
-                                    rows="4"
+                                    rows="2"
                                 ></textarea>
+                                {validation.message && (
+                                    <span className="text-red-500 text-sm">{validation.message}</span>
+                                )}
                             </div>
 
                             <button
@@ -243,21 +361,6 @@ export default function Contact() {
                                 Submit
                             </button>
                         </form>
-                    </div>
-
-                    {/* Map Section */}
-                    <div className="mt-12 p-6 bg-white shadow-md sm:rounded-lg">
-                        <h2 className="text-2xl text-blue-900 font-bold mb-4">Find Us Here</h2>
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d242118.14149822223!2d72.7410972662416!3d19.082522320601983!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b91f6a9f8b5f%3A0xc7d7c3fdd7c8be5e!2sKalyan%20East%2C%20Kalyan%2C%20Maharashtra%20421306!5e0!3m2!1sen!2sin!4v1692532076207!5m2!1sen!2sin"
-                            width="100%"
-                            height="450"
-                           
-                            style={{ border: 0 }}
-                            allowFullScreen=""
-                            aria-hidden="false"
-                            tabIndex="0"
-                        ></iframe>
                     </div>
                 </div>
             </div>

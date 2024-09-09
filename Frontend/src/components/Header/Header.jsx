@@ -9,14 +9,14 @@ import about_logo from '../../assets/about_logo.png';
 import ts_logo from '../../assets/ts_logo.png';
 import mybooking_logo from '../../assets/mybooking_logo.jpg';
 import contact_logo from '../../assets/contact_logo.jpeg';
+
 import { logout } from '../../Features/Slice'; // Ensure correct path to logout action
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const loginUser=localStorage.getItem("Username")
+  const loginUser = localStorage.getItem("Username");
   
-
   // Function to check and handle JWT expiration
   useEffect(() => {
     const key = "token";
@@ -27,13 +27,11 @@ const Header = () => {
         try {
           const decodedToken = jwtDecode(token); // Use jwt_decode directly
           const currentTime = new Date().getTime() / 1000; // Current time in seconds
-        
           
           if (decodedToken.exp < currentTime) {
             console.log("Jwt token expired!");
             localStorage.removeItem(key);
             localStorage.removeItem("Username");
-          
             window.location.reload(); // Reload the entire page
           }
         } catch (error) {
@@ -59,9 +57,9 @@ const Header = () => {
     dispatch(logout()); // Update Redux state
     localStorage.removeItem('Username'); // Clear local storage
     localStorage.removeItem('role'); // Clear role from local storage
-  
     navigate('/'); // Redirect to home page
   };
+
 
   return (
     <header className="fixed top-0 left-0 w-full z-50">
@@ -71,13 +69,17 @@ const Header = () => {
             <img src={logo} className="mr-3 h-12" alt="Logo" />
           </Link>
           <div className="flex items-center lg:order-2">
-            <Link
-              to="#"
-              className="text-blue-800 bg-yellow-300 hover:bg-yellow-200 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none flex items-center"
-            >
-              <img src={mybooking_logo} alt="My Bookings Icon" className="w-5 h-5 mr-2" />
-              My Bookings
-            </Link>
+
+
+            {loginUser && (
+              <Link
+                to="/mybookings"
+                className="text-blue-800 bg-yellow-300 hover:bg-yellow-200 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none flex items-center"
+              >
+                <img src={mybooking_logo} alt="My Bookings Icon" className="w-5 h-5 mr-2" />
+                My Bookings
+              </Link>
+            )}
             {loginUser ? (
               <div className="flex items-center">
                 <span className="text-blue-800 font-medium text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2">
@@ -90,7 +92,9 @@ const Header = () => {
                   Logout
                 </button>
               </div>
-            ) : (
+              
+            ) 
+            : (
               <Link
                 to="/loginandreg"
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2"

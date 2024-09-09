@@ -15,7 +15,6 @@ const userSlice = createSlice({
             localStorage.setItem("user",state.user)
         },
         logout: (state) => {
-            alert("Logout Successfully")
             state.user = null;
             localStorage.removeItem('token');
             localStorage.removeItem('user');
