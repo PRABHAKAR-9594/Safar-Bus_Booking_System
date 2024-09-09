@@ -31,6 +31,22 @@ function BusResultsPage() {
     isFoodNotAvailable: false
   });
 
+  // Prompt the user before refreshing the page
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      // Custom message for confirmation
+      event.preventDefault(); // Standard in modern browsers
+      event.returnValue = '';  // For older browsers
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Clean up the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);  // Empty array ensures it only runs on mount and unmount
+
   useEffect(() => {
     const fetchBusData = async () => {
       try {
@@ -43,14 +59,6 @@ function BusResultsPage() {
 
     fetchBusData();
   }, [Source, Destination]);
-
-  
-  
-  
-  
-
-  
-  
 
   const filteredBuses = buses.filter((bus) => {
     const matchesAC = filters.isAC && bus.Bus_type === 'AC';
@@ -76,8 +84,6 @@ function BusResultsPage() {
       matchesDayorNight
     );
   });
-
-  // const totalTravelTime = calculateTotalTime(filteredBuses);
 
   const hideScrollbarStyle = {
     overflowY: 'scroll',
@@ -106,7 +112,6 @@ function BusResultsPage() {
           className="w-3/4 flex flex-col space-y-4"
           style={{ ...hideScrollbarStyle, ...hideScrollbarWebkit }}
         >
-         
           {filteredBuses.length > 0 ? (
             filteredBuses.map((bus) => (
               <BusCard key={bus._id} bus={bus} />
