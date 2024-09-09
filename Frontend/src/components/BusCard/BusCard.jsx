@@ -2,11 +2,34 @@ import React from 'react';
 import { FaBus, FaClock, FaRupeeSign, FaArrowRight, FaCheckCircle, FaMapMarkerAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
+// Function needs to be declared outside of the component or at the top within it
+function calculateTotalTime(sourceTime, destinationTime) {
+  // Convert time strings to hours and minutes
+  const [sourceHours, sourceMinutes] = sourceTime.split(':').map(Number);
+  const [destHours, destMinutes] = destinationTime.split(':').map(Number);
+  
+  // Convert source and destination times to total minutes since start of the day
+  const sourceTotalMinutes = sourceHours * 60 + sourceMinutes;
+  const destTotalMinutes = destHours * 60 + destMinutes;
+  
+  // Calculate the difference in minutes (accounting for the day overlap)
+  let totalMinutes = destTotalMinutes - sourceTotalMinutes;
+  if (totalMinutes < 0) {
+    // If destination time is on the next day
+    totalMinutes += 24 * 60;
+  }
+  
+  // Convert the total minutes back to hours and minutes
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  
+  return `${hours} hours and ${minutes} minutes`;
+}
+
 function BusCard({ bus }) {
   // Provide default values to avoid errors
-  const foodFacility=bus.Food_Facility
-  
-
+  const foodFacility = bus.Food_Facility || 'Not Available';
+//  console.log(calculateTotalTime(bus.Source_time, bus.Destination_time))
   return (
     <div className="bg-white p-4 rounded-xl shadow-lg transition-shadow duration-300 mb-2 border border-gray-200 hover:shadow-md hover:bg-gray-50">
 
@@ -62,12 +85,15 @@ function BusCard({ bus }) {
       <div className="flex justify-between items-center text-md">
         <div className="flex-1 flex items-center">
           <FaClock className="inline text-yellow-500 mr-1 text-xl" />
-          <span className="font-semibold text-indigo-700">Total Time: {bus.Destination_time - bus.Source_time}</span>
+          <span className="font-semibold text-indigo-700">
+            Total Time: {calculateTotalTime(bus.Source_time,bus.Destination_time)}
+          </span>
         </div>
         <div className="flex-1 text-center font-semibold">
           <span className={`font-semibold text-md ${bus.Bus_type === 'AC' ? 'text-green-600' : 'text-red-600'}`}>
             {bus.Bus_type === 'AC' ? 'AC' : 'Non-AC'}
-          </span> | {bus.Bus_Class} | {foodFacility == 'Avaliable'? <span className='text-green-600'>Food Available</span> : <span className='text-red-600'>No Food</span>}
+          </span> | {bus.Bus_Class} | 
+          {foodFacility === 'Avaliable' ? <span className='text-green-600'>Food Available</span> : <span className='text-red-600'>No Food</span>}
         </div>
         <div className="flex-1 text-right flex items-center justify-end">
           <FaCheckCircle className="text-green-600 mr-1 text-xl" />

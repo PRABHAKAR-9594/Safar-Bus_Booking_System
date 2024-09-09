@@ -44,34 +44,13 @@ function BusResultsPage() {
     fetchBusData();
   }, [Source, Destination]);
 
-  const calculateTotalTime = (buses) => {
-    return buses.reduce((total, bus) => {
-      try {
-        // Ensure the Source_time and Destination_time are valid date strings
-        const sourceTimeStr = bus.Source_time;
-        const destinationTimeStr = bus.Destination_time;
-        
-        // Log the date strings for debugging
-        console.log(`Source Time String: ${sourceTimeStr}`);
-        console.log(`Destination Time String: ${destinationTimeStr}`);
-        
-        const sourceTime = new Date(sourceTimeStr);
-        const destinationTime = new Date(destinationTimeStr);
   
-        // Check for invalid dates
-        if (isNaN(sourceTime) || isNaN(destinationTime)) {
-          console.warn(`Invalid date encountered: ${sourceTimeStr} or ${destinationTimeStr}`);
-          return total;
-        }
   
-        const travelTime = (destinationTime - sourceTime) / (1000 * 60 * 60); // Convert milliseconds to hours
-        return total + travelTime;
-      } catch (error) {
-        console.error('Error calculating travel time:', error);
-        return total;
-      }
-    }, 0);
-  };
+  
+  
+
+  
+  
 
   const filteredBuses = buses.filter((bus) => {
     const matchesAC = filters.isAC && bus.Bus_type === 'AC';
@@ -86,8 +65,8 @@ function BusResultsPage() {
     const matchesNight = filters.isNight && bus.Timing === 'Night';
     const matchesDayorNight = (!filters.isDay && !filters.isNight) || matchesDay || matchesNight;
 
-    const matchesFoodAvailable = filters.isFoodAvailable && bus.Food_Facility === 'Available';
-    const matchesFoodNotAvailable = filters.isFoodNotAvailable && bus.Food_Facility === 'Not Available';
+    const matchesFoodAvailable = filters.isFoodAvailable && bus.Food_Facility === 'Avaliable';
+    const matchesFoodNotAvailable = filters.isFoodNotAvailable && bus.Food_Facility === 'Not-Avalible';
     const matchesFoodAvailableOrNot = (!filters.isFoodAvailable && !filters.isFoodNotAvailable) || matchesFoodAvailable || matchesFoodNotAvailable;
 
     return (
@@ -98,7 +77,7 @@ function BusResultsPage() {
     );
   });
 
-  const totalTravelTime = calculateTotalTime(filteredBuses);
+  // const totalTravelTime = calculateTotalTime(filteredBuses);
 
   const hideScrollbarStyle = {
     overflowY: 'scroll',
@@ -127,9 +106,7 @@ function BusResultsPage() {
           className="w-3/4 flex flex-col space-y-4"
           style={{ ...hideScrollbarStyle, ...hideScrollbarWebkit }}
         >
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">Total Travel Time: {totalTravelTime.toFixed(2)} hours</h3>
-          </div>
+         
           {filteredBuses.length > 0 ? (
             filteredBuses.map((bus) => (
               <BusCard key={bus._id} bus={bus} />
