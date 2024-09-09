@@ -13,6 +13,7 @@ import { heandlecomplain_route } from './routes/handlecomplaits.route.js';
 import { delete_route } from './routes/deletebus.route.js';
 import { modify_route } from './routes/modify.route.js';
 import { bus_data } from './routes/BusData.route.js';
+import { Ticket_Conf } from './routes/MyTicket.routes.js';
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -63,6 +64,7 @@ addbus_route(app)
 delete_route(app)
 modify_route(app)
 bus_data(app)
+Ticket_Conf(app)
 app.listen(server.PORT, () => {
     console.log(`Server is running on port ${server.PORT}`);
 });
