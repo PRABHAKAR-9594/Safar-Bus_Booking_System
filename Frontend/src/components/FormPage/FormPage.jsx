@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import TopBar from '../BusTopbar/BusTopbar';
+import TopBar from '../SearchBus/BusTopbar';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPassengers } from '../../Features/PassengersSlice';
 
 const PassengerDetailsForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();  // Initialize dispatch
+
+  const Source = useSelector(state => state.filter.source);
+  const Destination = useSelector(state => state.filter.destination);
+  const Date = useSelector(state => state.filter.date);
+  const selectedTotalPrice = useSelector((state) => state.seatNumPrice.totalPrice)
+  const selectedPrice = useSelector((state) => state.businfo.price)
 
   const { selectedSeats } = location.state || {};
 
@@ -13,13 +22,16 @@ const PassengerDetailsForm = () => {
     return <p>No seats selected. Please go back and select seats.</p>;
   }
 
+  // Initialize state with each passenger getting a seat number from selectedSeats
   const [passengerDetails, setPassengerDetails] = useState(
-    selectedSeats.map(() => ({
+    selectedSeats.map((seatNum) => ({
       name: '',
       age: '',
       gender: '',
       mobile: '',
       address: '',
+      price: selectedPrice,
+      seatNum: seatNum,  // Assign seatNum from selectedSeats
       errors: {
         name: '',
         age: '',
@@ -107,7 +119,11 @@ const PassengerDetailsForm = () => {
 
     setTimeout(() => {
       alert('Details submitted successfully!');
-      console.log(passengerDetails);
+
+      dispatch(setPassengers(passengerDetails));
+
+      console.log(passengerDetails);  // You can now see seatNum for each passenger here
+      console.log(selectedTotalPrice);
       setIsSubmitting(false);
 
       navigate('/searchBus/viewSeats/Form/payment', { state: { passengerDetails } });
@@ -147,7 +163,7 @@ const PassengerDetailsForm = () => {
 
   return (
     <div className="p-8 bg-gradient-to-r from-gray-100 to-blue-50 min-h-screen">
-      <TopBar source="Mumbai" destination="Pune" date="2024-09-01" seats={selectedSeats} />
+      <TopBar source={Source} destination={Destination} date={Date} seats={selectedSeats} />
       <h2 className="text-3xl font-bold text-indigo-700 mb-8 mt-32 text-center">Passenger Details</h2>
 
       {renderProgressBar()}
@@ -202,7 +218,10 @@ const PassengerDetailsForm = () => {
           disabled={!isFormValid() || isSubmitting}
         >
           {isSubmitting ? (
-            <AiOutlineLoading3Quarters className="animate-spin mr-2" />
+            <>
+              <AiOutlineLoading3Quarters className="animate-spin mr-2" />
+              Submitting...
+            </>
           ) : (
             'Submit Details'
           )}

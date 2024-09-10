@@ -1,15 +1,54 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const Processing = () => {
   const [seconds, setSeconds] = useState(30); // Initialize with 30 seconds
+  const [pnr, setPnr] = useState(localStorage.getItem('pnr') || null); // Retrieve PNR from localStorage if available
+  const [receiptId, setReceiptId] = useState(localStorage.getItem('receiptId') || null); // Retrieve receipt ID from localStorage if available
+  const [ticketId, setTicketId] = useState(localStorage.getItem('ticketId') || null); // Retrieve ticket ID from localStorage if available
+
   const navigate = useNavigate(); // Initialize useNavigate
+
+  // Function to generate a PNR with "SAFAR" and 6 digits representing time (HHMMSS)
+  const generatePNR = () => {
+    const currentDate = new Date();
+    const formattedTime = currentDate.toTimeString().split(' ')[0]; // Get HH:MM:SS
+    const timeDigits = formattedTime.replace(/:/g, ''); // Remove colons to get HHMMSS
+    return `SAFAR${timeDigits}`;
+  };
+
+  // Function to generate Receipt ID and Ticket ID with date and time
+  const generateReceiptIdAndTicketId = () => {
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().slice(0, 10); // YYYY-MM-DD
+    const formattedTime = currentDate.toTimeString().split(' ')[0]; // HH:MM:SS
+    const receiptId = `REC-${formattedDate}-${formattedTime.replace(/:/g, '')}`; // e.g., REC-2024-09-10-153045
+    const ticketId = `TIC-${formattedDate}-${formattedTime.replace(/:/g, '')}`; // e.g., TIC-2024-09-10-153045
+    return { receiptId, ticketId };
+  };
 
   useEffect(() => {
     if (seconds === 0) {
-      // Navigate to the desired URL when the timer ends
+      // Processing is considered successful here
+      const generatedPNR = generatePNR();
+      const { receiptId, ticketId } = generateReceiptIdAndTicketId();
+
+      setPnr(generatedPNR);
+      setReceiptId(receiptId);
+      setTicketId(ticketId);
+
+      // Store the PNR, receiptId, and ticketId in localStorage to persist after page refresh
+      localStorage.setItem('pnr', generatedPNR);
+      localStorage.setItem('receiptId', receiptId);
+      localStorage.setItem('ticketId', ticketId);
+
+      // Console log the generated values
+      console.log('PNR:', generatedPNR);
+      console.log('Receipt ID:', receiptId);
+      console.log('Ticket ID:', ticketId);
+
+      // Navigate to the desired URL (e.g., receipt page)
       navigate('/searchBus/viewSeats/Form/payment/receipt');
-      return;
     }
 
     // Set up a timer to count down every second
@@ -19,10 +58,24 @@ const Processing = () => {
 
     // Clean up timer on component unmount
     return () => clearInterval(timer);
-  }, [seconds, navigate]); // Add navigate as a dependency
+  }, [seconds, navigate]);
 
   // Calculate the percentage of completion
   const progress = ((30 - seconds) / 30) * 100;
+
+  // Handle case if processing fails (you can handle this based on payment failure logic)
+  useEffect(() => {
+    // In case of failure, reset PNR, receiptId, and ticketId to NULL
+    if (seconds < 0) {
+      setPnr(null);
+      setReceiptId(null);
+      setTicketId(null);
+
+      localStorage.removeItem('pnr');
+      localStorage.removeItem('receiptId');
+      localStorage.removeItem('ticketId');
+    }
+  }, [seconds]);
 
   return (
     <div className="bg-gradient-to-br from-purple-400 to-blue-400">
@@ -51,9 +104,7 @@ const Processing = () => {
         </div>
 
         {/* Additional Message */}
-        <p className="text-gray-500 mt-6">
-          We appreciate your patience!
-        </p>
+        <p className="text-gray-500 mt-6">We appreciate your patience!</p>
       </div>
     </div>
   );

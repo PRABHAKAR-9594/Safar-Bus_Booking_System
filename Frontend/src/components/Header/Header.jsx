@@ -15,7 +15,7 @@ import { logout } from '../../Features/Slice'; // Ensure correct path to logout 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const loginUser = localStorage.getItem("Username");
+  const loginUser = localStorage.getItem("username");
   
   // Function to check and handle JWT expiration
   useEffect(() => {

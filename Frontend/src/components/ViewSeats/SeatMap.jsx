@@ -2,7 +2,7 @@ import React from 'react';
 import Seat from './Seat';
 import busStering from '../../assets/busStering.jpg';
 
-const SeatMap = ({ selectedSeats, totalPrice, onSeatSelect, busType }) => {
+const SeatMap = ({ selectedSeats, onSeatSelect, busType }) => {
   const sittingSeats = {
     row1: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8'],
     row2: ['S9', 'S10', 'S11', 'S12', 'S13', 'S14', 'S15', 'S16'],
@@ -20,6 +20,7 @@ const SeatMap = ({ selectedSeats, totalPrice, onSeatSelect, busType }) => {
   };
 
   const renderSeatRow = (seats) => (
+    
     <div className="flex mb-2 space-x-2">
       {seats.map((seat, index) => (
         seat ? (
@@ -41,7 +42,7 @@ const SeatMap = ({ selectedSeats, totalPrice, onSeatSelect, busType }) => {
     <div className="flex justify-center items-center space-x-8 px-6 py-8 bg-yellow-200 rounded-3xl">
       {/* Seat Layout Section */}
       <div className="flex flex-col items-center">
-        {busType === 'sitting' && (
+        {busType === 'Sitting' && (
           <div className="flex flex-col items-start bg-gradient-to-r from-purple-400 via-pink-500 to-red-400 px-16 py-6 rounded-lg shadow-lg animate-fade-in">
             <div className="flex items-center">
               <img 
@@ -62,7 +63,7 @@ const SeatMap = ({ selectedSeats, totalPrice, onSeatSelect, busType }) => {
           </div>
         )}
 
-        {busType === 'sleeper' && (
+        {busType === 'Sleeper' && (
           <div className="flex flex-col items-start bg-gradient-to-r from-purple-400 via-pink-500 to-red-400 px-16 py-6 rounded-lg shadow-lg animate-fade-in">
             {/* Lower Deck Label */}
             <h2 className="text-lg font-semibold mb-4 text-gray-700">Lower Deck</h2>
@@ -85,7 +86,7 @@ const SeatMap = ({ selectedSeats, totalPrice, onSeatSelect, busType }) => {
         )}
 
         {/* Upper Deck */}
-        {busType === 'sleeper' && (
+        {busType === 'Sleeper' && (
           <div className="flex flex-col items-start mt-5 bg-gradient-to-r from-purple-400 via-pink-500 to-red-400 px-16 py-6 rounded-lg shadow-lg animate-fade-in">
             {/* Upper Deck Label */}
             <h2 className="text-lg font-semibold mb-4 text-gray-700">Upper Deck</h2>

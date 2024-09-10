@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaBus, FaClock, FaRupeeSign, FaArrowRight, FaCheckCircle, FaMapMarkerAlt } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setBusInfo } from '../../Features/BusInfoSlice';
+import { useNavigate } from 'react-router-dom';
+
 
 // Function needs to be declared outside of the component or at the top within it
 function calculateTotalTime(sourceTime, destinationTime) {
@@ -29,6 +32,27 @@ function calculateTotalTime(sourceTime, destinationTime) {
 function BusCard({ bus }) {
   // Provide default values to avoid errors
   const foodFacility = bus.Food_Facility || 'Not Available';
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
+
+  const handleBook = () =>{
+    dispatch(setBusInfo({
+      busNumber : bus.Bus_number,
+      busName : bus.Bus_name,
+      busType : bus.Bus_type,
+      busClass : bus.Bus_Class,
+      busSource : bus.Source,
+      busSourceTime : bus.Source_time,
+      busDestination : bus.Destination,
+      busDestinationTime : bus.Destination_time,
+      foodFacility : foodFacility,
+      price : bus.Seat_price
+    }))
+    // console.log(bus.Bus_Class)
+     navigate('/searchBus/viewSeats')
+  }
 //  console.log(calculateTotalTime(bus.Source_time, bus.Destination_time))
   return (
     <div className="bg-white p-4 rounded-xl shadow-lg transition-shadow duration-300 mb-2 border border-gray-200 hover:shadow-md hover:bg-gray-50">
@@ -73,11 +97,10 @@ function BusCard({ bus }) {
 
         {/* Call to Action */}
         <div className="text-right mt-1">
-          <Link to="/searchBus/viewSeats">
-            <button className="bg-red-500 text-white px-4 py-2 rounded-full font-semibold text-lg shadow-md hover:bg-red-600 transition-colors duration-300">
+            <button className="bg-red-500 text-white px-4 py-2 rounded-full font-semibold text-lg shadow-md hover:bg-red-600 transition-colors duration-300"
+            onClick={handleBook}>
               Book Now
             </button>
-          </Link>
         </div>
       </div>
 

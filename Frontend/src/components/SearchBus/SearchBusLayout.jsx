@@ -1,9 +1,9 @@
 // Layout.jsx
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
-import { AuthProvider } from './authcontext';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
+import { AuthProvider } from '../../authcontext';
 
 function Layout() {
   const location = useLocation();

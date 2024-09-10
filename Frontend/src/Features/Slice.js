@@ -12,13 +12,14 @@ const userSlice = createSlice({
     reducers: {
         login: (state, action) => {
             state.user = action.payload
-            localStorage.setItem("user",state.user)
+            
         },
         logout: (state) => {
             state.user = null;
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             localStorage.removeItem('role');
+            localStorage.removeItem('ID')
         },
     },
 });

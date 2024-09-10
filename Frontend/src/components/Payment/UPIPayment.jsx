@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Processing from './Processing'; // Assuming this is the processing screen component
 import scanner from '../../assets/scanner.jpg';
 
+
 const UPIPayment = () => {
   const [upiMethod, setUpiMethod] = useState('');
   const [upiId, setUpiId] = useState('');
@@ -10,6 +11,7 @@ const UPIPayment = () => {
   const [timer, setTimer] = useState(0); // Timer state
   const [errors, setErrors] = useState({}); // Error state
   const [optionSelected, setOptionSelected] = useState(false); // Track if an option is selected
+  
 
   const validateUPIId = (upiId) => {
     // Ensure UPI ID contains '@'

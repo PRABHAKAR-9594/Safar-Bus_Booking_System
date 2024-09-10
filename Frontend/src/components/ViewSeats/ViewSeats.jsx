@@ -2,13 +2,27 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Assuming you're using react-router-dom
 import SeatMap from './SeatMap';
 import SeatLegend from './SeatLegend';
-import TopBar from '../BusTopbar/BusTopbar';
+import TopBar from '../SearchBus/BusTopbar';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setSeatNumPrice } from '../../Features/SeatNumPriceSlice';
+
 
 const SeatSelection = () => {
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const [busType, setBusType] = useState('sitting');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const selectedClass = useSelector((state) => state.businfo.busClass)
+  const price = useSelector((state) => state.businfo.price)
+
+  
+
+  const Source = useSelector(state => state.filter.source);
+  const Destination = useSelector(state => state.filter.destination);
+  const Date = useSelector(state => state.filter.date);
+
+  
 
   const handleSeatSelect = (seat) => {
     if (selectedSeats.includes(seat)) {
@@ -24,12 +38,10 @@ const SeatSelection = () => {
     }
   };
 
-  const handleBusTypeChange = (type) => {
-    setBusType(type);
-    setSelectedSeats([]);
-  };
-
   const handleBooking = () => {
+    console.log(selectedClass)
+    dispatch(setSeatNumPrice({ seatNum : selectedSeats, totalPrice : totalPrice}))
+    
     if (selectedSeats.length === 0) {
       setMessage('Please select at least one seat to proceed');
     } else {
@@ -41,35 +53,20 @@ const SeatSelection = () => {
   
 
   const pricePerSeat = 50;
-  const totalPrice = selectedSeats.length * pricePerSeat;
+  const totalPrice = selectedSeats.length * price;
 
   return (
-    <div className="mt-32 flex flex-col min-h-screen bg-gradient-to-r from-blue-100 to-blue-300">
-      <TopBar source="Mumbai" destination="Pune" date="2024-09-01" />
-      <div className="flex flex-grow items-center justify-center p-4">
-        <div className={`flex flex-col w-full max-w-4xl bg-white p-6 rounded-lg shadow-xl relative overflow-auto ${busType === 'sleeper' ? 'space-y-6' : ''}`}>
-          <div className="flex justify-center mb-6 space-x-6">
-            <button
-              className={`px-5 py-3 rounded-lg font-semibold transition-all duration-300 transform ${busType === 'sitting' ? 'bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg scale-105' : 'bg-gray-300 text-gray-800 shadow-sm'}`}
-              onClick={() => handleBusTypeChange('sitting')}
-              aria-pressed={busType === 'sitting'}
-            >
-              Sitting Bus
-            </button>
-            <button
-              className={`px-5 py-3 rounded-lg font-semibold transition-all duration-300 transform ${busType === 'sleeper' ? 'bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg scale-105' : 'bg-gray-300 text-gray-800 shadow-sm'}`}
-              onClick={() => handleBusTypeChange('sleeper')}
-              aria-pressed={busType === 'sleeper'}
-            >
-              Sleeper Bus
-            </button>
-          </div>
+    <div className="mt-28 flex flex-col min-h-screen bg-gradient-to-r from-blue-100 to-blue-300">
+      <TopBar source={Source} destination={Destination} date={Date} />
+      <div className="flex flex-grow items-center justify-center p-4 mt-2">
+        <div className={`flex flex-col w-full max-w-4xl bg-white p-6 rounded-lg shadow-xl relative overflow-auto `}>
+
 
           <SeatLegend />
           <SeatMap
             selectedSeats={selectedSeats}
             onSeatSelect={handleSeatSelect}
-            busType={busType}
+            busType={selectedClass}
           />
         </div>
 

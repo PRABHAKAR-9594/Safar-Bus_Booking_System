@@ -1,23 +1,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import tick from '../../assets/tick.jpg'; // Import the tick image
+import { useSelector } from 'react-redux';
 
 const PaymentSuccess = () => {
+
+  const receiptId = localStorage.getItem('receiptId')
+  const pnr = localStorage.getItem('pnr')
+  const userName = localStorage.getItem('username')
+  const totalPrice = useSelector((state) => state.seatNumPrice.totalPrice)
+
   const navigate = useNavigate(); // Create navigate function for navigation
-
-  // Generate a random 6-digit PNR number
-  const generatePNR = () => {
-    const randomNumber = Math.floor(100000 + Math.random() * 900000); // Generates a random 6-digit number
-    return `SAFAR${randomNumber}`;
-  };
-
+  
   const receiptDetails = {
-    receiptId: '1234567890',
+    receiptId: receiptId,
     date: new Date().toLocaleDateString(),
     time: new Date().toLocaleTimeString(),
-    amount: '₹500',
-    passengerDetails: 'John Doe',
-    pnrNumber: generatePNR(), // Generated PNR number
+    amount: totalPrice,
+    passengerDetails: userName,
+    pnrNumber: pnr, // Generated PNR number
   };
 
   const downloadReceipt = () => {
@@ -34,6 +35,7 @@ const PaymentSuccess = () => {
     link.href = URL.createObjectURL(blob);
     link.download = 'Receipt.txt';
     link.click();
+    console.log(payemntMode)
   };
 
   return (

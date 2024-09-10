@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import TopBar from '../BusTopbar/BusTopbar';
-import FilterOptions from '../BusFilter/BusFilter';
-import BusCard from '../BusCard/BusCard';
+import TopBar from './BusTopbar';
+import FilterOptions from './BusFilter';
+import BusCard from './BusCard'
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 

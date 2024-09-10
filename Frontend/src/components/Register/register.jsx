@@ -114,9 +114,12 @@ export default function Register() {
       const token = response.data.AccessToken;
       const loginUser = response.data.name;
       const role = response.data.userType;
-      localStorage.setItem('Username', loginUser);
-      localStorage.setItem('role', role);
-      localStorage.setItem('token', token);
+      const userId = response.data.userId;
+
+      localStorage.setItem('username', loginUser);
+            localStorage.setItem('role', role);
+            localStorage.setItem('token', token);
+            localStorage.setItem('ID',userId)
 
       dispatch(login(loginUser));
 

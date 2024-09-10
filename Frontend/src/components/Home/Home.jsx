@@ -96,6 +96,12 @@ function BusBookingForm() {
       valid = false;
     }
 
+    // Validate source and destination are not the same
+    if (source === destination) {
+      setDestinationError('Source and destination cannot be the same');
+      valid = false;
+    }
+
     // Validate date
     if (!date) {
       setDateError('Date is required');
@@ -221,7 +227,7 @@ function BusBookingForm() {
           </div>
 
           {/* Search Button */}
-           <button
+          <button
             onClick={handleSearch}
             className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition duration-300 text-white font-bold py-3 px-8 rounded-full shadow-lg mt-7"
           >
@@ -229,8 +235,8 @@ function BusBookingForm() {
           </button>
         </div>
       </div>
-     {/* Customer Reviews */}
-     <div className="relative z-10 mt-10 w-full max-w-xl">
+      {/* Customer Reviews */}
+      <div className="relative z-10 mt-10 w-full max-w-xl">
         <h2 className="text-2xl font-bold text-blue-800 mb-4 text-center">Customer Reviews</h2>
         <div className="flex space-x-4 animate-slide-in justify-center">
           {reviews.map((review) => (
