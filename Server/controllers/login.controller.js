@@ -28,7 +28,8 @@ export const login = async (req, res) => {
         {'Message':'Login successful',
             'name':user.name,
             'AccessToken':token,
-            'userType': user.userType
+            'userType': user.userType,
+            'userId' : user._id
         })
     } catch (error) {
         res.status(500).json({ error: 'Error logging in user' });

@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
 const PassangerData=new mongoose.Schema({
+
+    
     Fullname:{
         type:String,
         require:true
@@ -44,7 +46,7 @@ const myTicket=new mongoose.Schema({
         type:String,
         require:true  
     },
-    price:{
+    totalPrice:{
         type:String,
         require:true
     },
