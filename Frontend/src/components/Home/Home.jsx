@@ -24,7 +24,7 @@ function BusBookingForm() {
 
   const locations = [
     // List of locations
-    "Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune",
+    "Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune","Thane","Pryagraj",
     // Add other locations here
   ];
 

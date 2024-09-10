@@ -2,9 +2,11 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import tick from '../../assets/tick.jpg'; // Import the tick image
 import { useSelector } from 'react-redux';
-
+import TicketDetails from '../../TicketDetails';
 const PaymentSuccess = () => {
-
+  const reduxdata=useSelector((state)=> state.passengers.passengers)
+  console.log("The redux data"+reduxdata[0]["name"]);
+  
   const receiptId = localStorage.getItem('receiptId')
   const pnr = localStorage.getItem('pnr')
   const userName = localStorage.getItem('username')
@@ -109,7 +111,9 @@ const PaymentSuccess = () => {
           Back to Home
         </button>
       </div>
+      <TicketDetails></TicketDetails>
     </div>
+
   );
 };
 
