@@ -1,21 +1,38 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 export default function PNRStatus() {
     const [pnrNumber, setPnrNumber] = useState('');
-    const [ticketStatus, setTicketStatus] = useState('');
+    const [passengerDetails, setPassengerDetails] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const handleCheckStatus = (e) => {
+    const handleCheckStatus = async (e) => {
         e.preventDefault();
-        // Mock API call to check the PNR status, in a real application it would be an API call
-        if (pnrNumber === '1234567890') {
-            setTicketStatus('Confirmed');
-            setPnrNumber("")
         
-        } else {
-            setTicketStatus('Waiting List');
-            setPnrNumber("")
+        try {
+            // Post request to fetch passenger details
+            const response = await axios.post('http://localhost:8080/Ticketstatus', { PnrNumber: pnrNumber });
+            console.log(response.data);
+            if (response) {
+                const passengerArray = response.data;
+                const passengerData = passengerArray.PassangerDetails;
+                setPassengerDetails(passengerData || []); // Default to an empty array if no passenger details are found
+                setErrorMessage(''); // Clear any previous error messages
+            } else {
+                setPassengerDetails([]); // Clear passenger details if no valid response
+                setErrorMessage('No passenger details found.');
+            }
+        } catch (error) {
+            // Handle 400 error for invalid PNR number
+            if (error.response && error.response.status === 400) {
+                setErrorMessage('Please enter a valid PNR number!');
+            } else {
+                console.error(error);
+                setErrorMessage('An error occurred while fetching the details. Please try again.');
+            }
         }
-        
+
+        setPnrNumber("");
     };
 
     return (
@@ -47,27 +64,34 @@ export default function PNRStatus() {
                     </button>
                 </form>
 
-                {ticketStatus && (
-                    <div className="mt-8 p-4 bg-white border border-blue-700 rounded-lg shadow-lg text-center transition duration-300 ease-in-out transform hover:scale-105">
-                        <h2 className="text-2xl font-bold text-gray-800">Current Status</h2>
-                        <p className={`mt-4 text-xl font-semibold ${ticketStatus === 'Confirmed' ? 'text-green-600' : 'text-red-600'} transition-colors duration-300 ease-in-out`}>
-                            {ticketStatus}
-                        </p>
+                {/* Error Message */}
+                {errorMessage && (
+                    <div className="mt-8 p-4 bg-red-100 border border-red-500 rounded-lg text-red-700 text-center">
+                        {errorMessage}
                     </div>
                 )}
 
-                {/* Additional content like FAQ or Info */}
-                <div className="mt-12">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
-                    <ul className="list-disc pl-6 text-gray-600">
-                        <li className="mt-2">
-                            <strong>How to check PNR status?</strong> - Enter your PNR number in the box above and click "Check Status" to see your current ticket status.
-                        </li>
-                        <li className="mt-2">
-                            <strong>What does "Waiting List" mean?</strong> - It indicates that your ticket is not yet confirmed. You may need to wait for confirmation.
-                        </li>
-                    </ul>
-                </div>
+                {/* Display Passenger Details */}
+                {Array.isArray(passengerDetails) && passengerDetails.length > 0 && (
+                    <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {passengerDetails.map((passenger, index) => (
+                            <div
+                                key={index}
+                                className="bg-white rounded-lg shadow-lg p-6 transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl"
+                            >
+                                <h2 className="text-xl font-bold text-blue-600 mb-2">
+                                    Passenger {index + 1}
+                                </h2>
+                                <p className="text-lg text-gray-800 font-semibold">
+                                    <span className="text-gray-600">Name:</span> {passenger.Fullname}
+                                </p>
+                                <p className="text-lg text-gray-800 font-semibold">
+                                    <span className="text-gray-600">Seat Number:</span> {passenger.SeatNo}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
