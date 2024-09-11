@@ -26,6 +26,10 @@ const PassangerData=new mongoose.Schema({
     SeatNo:{
         type:String,
         require:true   
+    },
+    TicketPrice:{
+        type:String,
+        require:true 
     }
 })
 

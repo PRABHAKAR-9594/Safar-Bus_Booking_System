@@ -7,7 +7,7 @@ export const Ticket_Book = async (req, res) => {
         userName: request.userName,
         BusNumber: request.BusNumber,
         BusName: request.BusName,
-        price: request.price,
+        totalPrice: request.totalPrice,
         Bus_Type: request.Bus_Type,
         Bus_class: request.Bus_class,
         SourceTiming: request.SourceTiming,
