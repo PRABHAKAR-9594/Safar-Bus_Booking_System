@@ -11,7 +11,7 @@ export const Ticket_Book = async (req, res) => {
         Bus_Type: request.Bus_Type,
         Bus_class: request.Bus_class,
         SourceTiming: request.SourceTiming,
-        DestinationTiming: request.DestinationTiminge,
+        DestinationTiming: request.DestinationTiming,
         FoodFacility:request.FoodFacility,
         Source:request.Source,
         Date:request.Date,

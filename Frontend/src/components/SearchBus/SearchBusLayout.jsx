@@ -3,7 +3,7 @@ import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import { AuthProvider } from '../../authcontext';
+import { AuthProvider } from '../../authcontext'
 
 function Layout() {
   const location = useLocation();

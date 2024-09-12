@@ -12,6 +12,8 @@ import Help from './components/Help/Help.jsx'
 import About from './components/About/About.jsx'
 import Contact from './components/Contact/Contact.jsx'
 import User from './components/User/User.jsx'
+import MyBooking from './components/MyBooking/MyBooking.jsx'
+
 
 import Register from './components/Register/register.jsx'
 import AddBus from './components/Admin/AddBus/AddBus.jsx'
@@ -45,6 +47,7 @@ const router = createBrowserRouter(
       <Route path='status' element={<Status />} />
       <Route path='contact' element={<Contact />} />
       <Route path='help' element={<Help />} />
+      <Route path='mybookings' element={<MyBooking/>} />
       </Route>
 
       <Route path='user/:userid' element={<User />} />

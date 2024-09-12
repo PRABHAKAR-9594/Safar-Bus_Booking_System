@@ -50,9 +50,14 @@ function BusCard({ bus }) {
       foodFacility : foodFacility,
       price : bus.Seat_price
     }))
+    console.log("Bus SourceTime : "+ bus.Source_time);
     // console.log(bus.Bus_Class)
      navigate('/searchBus/viewSeats')
   }
+
+  // console.log("Bus SourceTime : "+ bus.Source_time);
+  // console.log("Bus SourceTime : "+ bus.Source_time);
+  
 //  console.log(calculateTotalTime(bus.Source_time, bus.Destination_time))
   return (
     <div className="bg-white p-4 rounded-xl shadow-lg transition-shadow duration-300 mb-2 border border-gray-200 hover:shadow-md hover:bg-gray-50">
