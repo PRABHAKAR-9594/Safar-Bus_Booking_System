@@ -2,7 +2,7 @@ import React from 'react';
 import Seat from './Seat';
 import busStering from '../../assets/busStering.jpg';
 
-const SeatMap = ({ selectedSeats, onSeatSelect, busType }) => {
+const SeatMap = ({ selectedSeats, onSeatSelect, busType, bookedSeats }) => {
   const sittingSeats = {
     row1: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8'],
     row2: ['S9', 'S10', 'S11', 'S12', 'S13', 'S14', 'S15', 'S16'],
@@ -20,7 +20,6 @@ const SeatMap = ({ selectedSeats, onSeatSelect, busType }) => {
   };
 
   const renderSeatRow = (seats) => (
-    
     <div className="flex mb-2 space-x-2">
       {seats.map((seat, index) => (
         seat ? (
@@ -28,6 +27,7 @@ const SeatMap = ({ selectedSeats, onSeatSelect, busType }) => {
             key={seat}
             seat={seat}
             isSelected={selectedSeats.includes(seat)}
+            isBooked={bookedSeats.includes(seat)} // Pass booked seats
             onSeatSelect={onSeatSelect}
             className="transition-transform duration-300 hover:scale-110 hover:bg-green-300 active:bg-green-500"
           />
