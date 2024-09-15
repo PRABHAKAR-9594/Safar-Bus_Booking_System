@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import bus_background_logo from '../../assets/bus_background_logo.jpg'; // Import the bus image
 import { useDispatch } from 'react-redux'; // Added useDispatch
 import { setFilter } from '../../Features/FilterSlice'; // Import setFilter from your slice
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 function BusBookingForm() {
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState('');
-
+  const [reviews,setreviews]=useState([]);
   const [sourceError, setSourceError] = useState(''); // Error state for source
   const [destinationError, setDestinationError] = useState(''); // Error state for destination
   const [dateError, setDateError] = useState(''); // Error state for date
@@ -16,11 +16,24 @@ function BusBookingForm() {
   const dispatch = useDispatch(); // Use useDispatch to dispatch actions
   const navigate = useNavigate();
 
-  const [reviews] = useState([
-    { id: 1, name: 'John Doe', feedback: 'Great service!' },
-    { id: 2, name: 'Jane Smith', feedback: 'Very comfortable ride.' },
-    { id: 3, name: 'Alex Johnson', feedback: 'On time and clean buses.' },
-  ]);
+ 
+ 
+  useEffect(()=>{
+  async function reviewfeatching (){
+  const Apireview= await axios.get('http://localhost:8080/displayReview')
+  if(Apireview.data){
+    setreviews(Apireview.data)
+
+  }
+  else{
+    console.log("No data Found !");
+    
+  }
+  
+  }
+  reviewfeatching()
+},[])
+
 
   const locations = [
     // List of locations
@@ -245,7 +258,7 @@ function BusBookingForm() {
               className="flex-none w-64 bg-gradient-to-br from-white to-blue-100 p-6 rounded-lg shadow-xl text-center transform hover:scale-105 transition duration-300"
             >
               <h3 className="text-xl font-bold text-blue-700">{review.name}</h3>
-              <p className="text-gray-600 mt-2">{review.feedback}</p>
+              <p className="text-gray-600 mt-2">{review.review}</p>
             </div>
           ))}
         </div>

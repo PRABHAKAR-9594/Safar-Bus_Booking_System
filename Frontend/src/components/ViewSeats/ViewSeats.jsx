@@ -111,7 +111,7 @@ const SeatSelection = () => {
           </div>
           <div className="mb-4">
             <h3 className="text-xl font-semibold text-gray-800">Total Price:</h3>
-            <p className="text-lg font-bold text-gray-800">${totalPrice}</p>
+            <p className="text-lg font-bold text-gray-800">₹{totalPrice}</p>
           </div>
           <button
             className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
