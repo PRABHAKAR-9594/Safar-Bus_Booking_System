@@ -51,9 +51,7 @@ const HelpPage = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-blue-600 text-white p-6 text-center">
-        <p>© 2024 YourBusBookingApp. All rights reserved.</p>
-      </footer>
+    
     </div>
   );
 };

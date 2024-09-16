@@ -26,7 +26,7 @@ function TicketDetails() {
   const date = useSelector((state) => state.filter.date);
   const totalPrice = useSelector((state) => state.seatNumPrice.totalPrice);
   const paymentMode = useSelector((state) => state.paymentMode.paymentMode);
-  const ticket=useSelector((state)=>state.businfo.price)
+  const ticket = useSelector((state) => state.businfo.price)
   // Map passenger details to match your schema
   const mappedPassengers = passengers.map((passenger) => ({
     Fullname: passenger.name,
@@ -35,7 +35,7 @@ function TicketDetails() {
     MobileNumber: passenger.mobile,
     Address: passenger.address,
     SeatNo: passenger.seatNum,
-    TicketPrice:ticket // Assuming ticket price is shared among passengers
+    TicketPrice: ticket // Assuming ticket price is shared among passengers
   }));
 
   // console.log(mappedPassengers)
@@ -60,16 +60,48 @@ function TicketDetails() {
         PassangerDetails: mappedPassengers // Send correctly formatted passenger details
       });
       // console.log('Response:', response.data);
-     
-      
+
+
+      // For sending the gmail purpose 
+
+
+      const text = `
+Dear ${userName},
+
+We are pleased to inform you that your ticket has been successfully booked. Below are your booking details:
+
+PNR Number: ${pnr}
+
+You can print your ticket by visiting our website or presenting your PNR number at the booking counter.
+
+If you have any further questions or need assistance, feel free to contact our support team.
+
+Thank you for choosing our service!
+
+Best regards,
+Safar Customer Support Team
+`;
+const subject=`Your Ticket Booking Confirmation - PNR Number ${pnr}`
+const gmail = localStorage.getItem('Gmail');
+
+
+      await axios.post('http://localhost:8080/sendGmail', {
+      text: text,
+      gmail: gmail,
+      Subject: subject
+      });
+
+
+
+
     } catch (error) {
       console.error('Error fetching bus data:', error.response?.data || error.message);
     }
   };
 
   fetchBusData();
-  
- 
+
+
 }
 
 export default TicketDetails;

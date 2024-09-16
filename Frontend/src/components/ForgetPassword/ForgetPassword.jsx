@@ -19,8 +19,27 @@ function ForgetPassword() {
             if (response.data.success) {
                 const otp = Math.floor(1000 + Math.random() * 9000); // Generate 4-digit OTP
                 setGeneratedOtp(otp);
-                alert(`Your OTP is ${otp}`);
+                const subject = "Verification OTP";
+               
+                const text = `Dear User,
+
+Your One-Time Password (OTP) for resetting your password is: ${otp}
+
+Please use this OTP to verify your identity and proceed with resetting your password. This OTP is valid for 10 minutes. 
+
+If you did not request this, please ignore this email.
+
+Thank you,
+Safar Support Team`; // Use the generated OTP here
+                const gmail = localStorage.getItem('Gmail'); // Use the correct key to retrieve email from localStorage
+
+                await axios.post('http://localhost:8080/sendGmail', {
+                    text: text,
+                    gmail: gmail,
+                    Subject: subject
+                });
                 setIsOtpVerified(false); // Reset OTP verification status
+                alert("OTP has been sent to your email.");
             } else {
                 alert("Mobile number or email not found");
             }
@@ -72,14 +91,14 @@ function ForgetPassword() {
                 <div className="mt-12">
                     {!generatedOtp ? (
                         <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); handleGenerateOtp(); }}>
-                            <h2 className="text-3xl font-extrabold text-center mb-4 text-blue-800 animate__animated animate__fadeIn">Forgot Password</h2>
+                            <h2 className="text-3xl font-extrabold text-center mb-4 text-blue-800">Forgot Password</h2>
 
                             <input
                                 type="email"
                                 placeholder="Enter Email ID"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full p-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-shadow animate__animated animate__fadeIn"
+                                className="w-full p-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 required
                             />
                             <input
@@ -87,11 +106,11 @@ function ForgetPassword() {
                                 placeholder="Enter Mobile Number"
                                 value={mobileNumber}
                                 onChange={(e) => setMobileNumber(e.target.value)}
-                                className="w-full p-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-shadow animate__animated animate__fadeIn"
+                                className="w-full p-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 required
                             />
                             
-                            <button type="submit" className="w-full py-3 text-lg font-semibold text-white bg-blue-800 rounded-lg shadow-md hover:bg-blue-900 transition-colors animate__animated animate__fadeIn">Generate OTP</button>
+                            <button type="submit" className="w-full py-3 text-lg font-semibold text-white bg-blue-800 rounded-lg shadow-md hover:bg-blue-900 transition-colors">Generate OTP</button>
                         </form>
                     ) : (
                         <>
@@ -101,10 +120,10 @@ function ForgetPassword() {
                                     placeholder="Enter OTP"
                                     value={otp}
                                     onChange={(e) => setOtp(e.target.value)}
-                                    className="w-full p-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-shadow animate__animated animate__fadeIn"
+                                    className="w-full p-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                                     required
                                 />
-                                <button type="submit" className="w-full py-3 text-lg font-semibold text-white bg-blue-800 rounded-lg shadow-md hover:bg-blue-900 transition-colors animate__animated animate__fadeIn">
+                                <button type="submit" className="w-full py-3 text-lg font-semibold text-white bg-blue-800 rounded-lg shadow-md hover:bg-blue-900 transition-colors">
                                     {isOtpVerified ? "Verified Successfully" : "Verify OTP"}
                                 </button>
                             </form>
@@ -115,13 +134,13 @@ function ForgetPassword() {
                                         placeholder="Enter New Password"
                                         value={newPassword}
                                         onChange={(e) => setNewPassword(e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-shadow animate__animated animate__fadeIn"
+                                        className="w-full p-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                                         required
                                         minLength={8}
                                         pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                                         title="Password must be at least 8 characters long and contain at least one number, one uppercase letter, and one lowercase letter."
                                     />
-                                    <button type="submit" className="w-full py-3 text-lg font-semibold text-white bg-blue-800 rounded-lg shadow-md hover:bg-blue-900 transition-colors animate__animated animate__fadeIn">Reset Password</button>
+                                    <button type="submit" className="w-full py-3 text-lg font-semibold text-white bg-blue-800 rounded-lg shadow-md hover:bg-blue-900 transition-colors">Reset Password</button>
                                 </form>
                             )}
                         </>

@@ -115,11 +115,14 @@ export default function Register() {
       const loginUser = response.data.name;
       const role = response.data.userType;
       const userId = response.data.userId;
-
-      localStorage.setItem('username', loginUser);
+      const Gmail= response.data.email
+      console.log(Gmail);
+      
+            localStorage.setItem('username', loginUser);
             localStorage.setItem('role', role);
             localStorage.setItem('token', token);
             localStorage.setItem('ID',userId)
+            localStorage.setItem('Gmail',Gmail)
 
       dispatch(login(loginUser));
 

@@ -4,7 +4,9 @@ import { useDispatch } from 'react-redux'; // Added useDispatch
 import { setFilter } from '../../Features/FilterSlice'; // Import setFilter from your slice
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-function BusBookingForm() {
+
+const BusBookingForm=()=> {
+  // MailService()
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState('');
@@ -136,7 +138,10 @@ function BusBookingForm() {
   };
 
   // Restrict the date input
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date();
+  today.setDate(today.getDate() + 1);  // Set the date to tomorrow
+  const minDate = today.toISOString().split('T')[0];
+
   const oneMonthAhead = new Date();
   oneMonthAhead.setMonth(oneMonthAhead.getMonth() + 1);
   const maxDate = oneMonthAhead.toISOString().split('T')[0];
@@ -232,7 +237,7 @@ function BusBookingForm() {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              min={today}
+              min={minDate}
               max={maxDate}
               className="w-full px-4 py-3 text-lg rounded-lg border-2 border-blue-300 focus:outline-none focus:border-purple-500 shadow-md bg-white"
             />

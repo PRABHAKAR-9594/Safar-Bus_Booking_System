@@ -15,16 +15,19 @@ import { modify_route } from './routes/modify.route.js';
 import { bus_data } from './routes/BusData.route.js';
 import { Ticket_Conf } from './routes/MyTicket.routes.js';
 import { Ticket_status_Route } from './routes/TicketStatus.route.js';
-import { my_Booking } from './controllers/myBooking.controllers.js';
+// import { my_Booking } from './controllers/myBooking.controllers.js';
 import { myBookingRoute } from './routes/myBooking.routes.js';
 import { review_route } from './routes/review.route.js';
+import { GmailApi_Route } from './routes/GmailApi.route.js';
+// import { gmailauth } from './gmailTesting.js';
+
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 mongoose.connect(server.DB_URL)
 const db = mongoose.connection
-
 db.on('error', () => {
     console.log("Error while connecting the database !")
 })
@@ -73,6 +76,7 @@ Ticket_Conf(app)
 Ticket_status_Route(app)
 myBookingRoute(app)
 review_route(app)
+GmailApi_Route(app)
 
 app.listen(server.PORT, () => {
     console.log(`Server is running on port ${server.PORT}`);
