@@ -1,6 +1,3 @@
-Here's a sample README file for your MEARN stack bus booking application:
-
----
 
 # MEARN Stack Bus Booking Application
 
@@ -97,6 +94,3 @@ Feel free to contribute to this project by submitting issues, feature requests, 
 
 For any questions or support, please contact [mauryaprabhakar677@gmail.com].
 
----
-
-Feel free to adjust the details as needed to fit your specific application.
