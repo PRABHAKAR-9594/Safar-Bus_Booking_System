@@ -17,6 +17,17 @@ const AddBusForm = () => {
         Food_Facility: ''
     });
 
+
+    if(formData.Bus_Class == 'Sleeper' ){
+
+      formData.Number_seat=48
+    }
+    
+    if(formData.Bus_Class == 'Sitting' ){
+
+      formData.Number_seat=32
+    }
+
     const locations = [
         "Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune", "Thane", "Prayagraj",
         // Add other locations here
@@ -73,6 +84,10 @@ const AddBusForm = () => {
         setTimeout(() => setStateFunction(false), 100);
     };
 
+    const handleMouseDown = (e) => {
+        e.preventDefault();
+    };
+
     const [alert, setAlert] = useState({ message: '', type: '', countdown: 5 });
     const [countdown, setCountdown] = useState(5);
 
@@ -86,15 +101,9 @@ const AddBusForm = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prevData => {
-            const updatedData = { ...prevData, [name]: value };
-            
-            // Set the number of seats based on Bus_Class
-            if (name === 'Bus_Class') {
-                updatedData.Number_seat = value === 'Sleeper' ? 48 : (value === 'Sitting' ? 32 : '');
-            }
-
-            return updatedData;
+        setFormData({
+            ...formData,
+            [name]: value
         });
     };
 
@@ -144,7 +153,6 @@ const AddBusForm = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Form fields here */}
                     <div>
                         <label htmlFor="busNumber" className="block text-sm font-semibold text-gray-100">Bus Number</label>
                         <input
@@ -216,6 +224,7 @@ const AddBusForm = () => {
                                 {filteredSourceSuggestions.map((suggestion, index) => (
                                     <li
                                         key={index}
+                                        onMouseDown={handleMouseDown} // Prevents input blur on click
                                         onClick={() => handleSourceSelect(suggestion)}
                                         className="cursor-pointer hover:bg-gray-200 p-2"
                                     >
@@ -245,6 +254,7 @@ const AddBusForm = () => {
                                 {filteredDestinationSuggestions.map((suggestion, index) => (
                                     <li
                                         key={index}
+                                        onMouseDown={handleMouseDown} // Prevents input blur on click
                                         onClick={() => handleDestinationSelect(suggestion)}
                                         className="cursor-pointer hover:bg-gray-200 p-2"
                                     >
@@ -282,21 +292,20 @@ const AddBusForm = () => {
                     </div>
 
                     <div>
-            <label htmlFor="busType" className="block text-sm font-semibold text-gray-100">Bus Type</label>
-            <select
-              id="busType"
-              name="Bus_type"
-              value={formData.Bus_type}
-              onChange={handleChange}
-              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
-              required
-            >
-              <option value="" disabled>Select Bus Type</option>
-              <option value="AC">AC</option>
-              <option value="Non-AC">Non-AC</option>
-            </select>
-          </div>
-
+                        <label htmlFor="busType" className="block text-sm font-semibold text-gray-100">Bus Type</label>
+                        <select
+                            id="busType"
+                            name="Bus_type"
+                            value={formData.Bus_type}
+                            onChange={handleChange}
+                            className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
+                            required
+                        >
+                            <option value="" disabled>Select Bus Type</option>
+                            <option value="AC">AC</option>
+                            <option value="Non-AC">Non-AC</option>
+                        </select>
+                    </div>
 
                     <div>
                         <label htmlFor="busClass" className="block text-sm font-semibold text-gray-100">Bus Class</label>
@@ -308,47 +317,51 @@ const AddBusForm = () => {
                             className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
                             required
                         >
-                            <option value="">Select Class</option>
+                            <option value="" disabled>Select Bus Class</option>
                             <option value="Sleeper">Sleeper</option>
                             <option value="Sitting">Sitting</option>
                         </select>
                     </div>
 
                     <div>
-            <label htmlFor="busType" className="block text-sm font-semibold text-gray-100">Timing</label>
-            <select
-              id="Timing"
-              name="Timing"
-              value={formData.Timing}
-              onChange={handleChange}
-              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
-              required
-            >
-              <option value="" disabled>Select Bus Timing</option>
-              <option value="Day">Day</option>
-              <option value="Night">Night</option>
-            </select>
-          </div>
+                        <label htmlFor="Timing" className="block text-sm font-semibold text-gray-100">Timing</label>
+                        <select
+                            id="Timing"
+                            name="Timing"
+                            value={formData.Timing}
+                            onChange={handleChange}
+                            className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
+                            required
+                        >
+                            <option value="" disabled>Select Bus Timing</option>
+                            <option value="Day">Day</option>
+                            <option value="Night">Night</option>
+                        </select>
+                    </div>
 
-          <div>
-            <label htmlFor="busType" className="block text-sm font-semibold text-gray-100">Food Facility</label>
-            <select
-              id="Food_Facility"
-              name="Food_Facility"
-              value={formData.Food_Facility}
-              onChange={handleChange}
-              className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
-              required
-            >
-              <option value="" disabled>Food Facility</option>
-              <option value="Avaliable">Avaliable</option>
-              <option value="Not-Avalible">Not-Avalible</option>
-            </select>
-          </div>
+                    <div>
+                        <label htmlFor="Food_Facility" className="block text-sm font-semibold text-gray-100">Food Facility</label>
+                        <select
+                            id="Food_Facility"
+                            name="Food_Facility"
+                            value={formData.Food_Facility}
+                            onChange={handleChange}
+                            className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
+                            required
+                        >
+                            <option value="" disabled>Food Facility</option>
+                            <option value="Available">Available</option>
+                            <option value="Not Available">Not Available</option>
+                        </select>
+                    </div>
+
                 </div>
 
-                <div className="text-center">
-                    <button type="submit" className="px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50">
+                <div className="flex justify-center">
+                    <button
+                        type="submit"
+                        className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400"
+                    >
                         Add Bus
                     </button>
                 </div>
