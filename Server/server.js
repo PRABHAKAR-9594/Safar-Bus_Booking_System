@@ -19,6 +19,7 @@ import { Ticket_status_Route } from './routes/TicketStatus.route.js';
 import { myBookingRoute } from './routes/myBooking.routes.js';
 import { review_route } from './routes/review.route.js';
 import { GmailApi_Route } from './routes/GmailApi.route.js';
+import { viewRevenu_router } from './routes/viewRevenu.routes.js';
 // import { gmailauth } from './gmailTesting.js';
 
 
@@ -77,6 +78,8 @@ Ticket_status_Route(app)
 myBookingRoute(app)
 review_route(app)
 GmailApi_Route(app)
+viewRevenu_router(app)
+
 
 app.listen(server.PORT, () => {
     console.log(`Server is running on port ${server.PORT}`);
