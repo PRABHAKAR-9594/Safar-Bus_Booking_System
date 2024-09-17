@@ -18,6 +18,21 @@ const AddBusForm = () => {
     });
 
 
+
+
+function selectDayOrNight(time) {
+    // Split the time string (e.g., "2:50") into hours and minutes
+    const [hours, minutes] = time.split(":")
+    
+    // Check if time is between 4:00 and 7:00 (inclusive of 4:00 and 7:00)
+    if (hours >= 4 && hours < 7){
+        formData.Timing='Day'
+    } else {
+        formData.Timing='Night'
+    }
+}
+selectDayOrNight(formData.Source_time)
+
     if(formData.Bus_Class == 'Sleeper' ){
 
       formData.Number_seat=48
@@ -179,18 +194,7 @@ const AddBusForm = () => {
                         />
                     </div>
 
-                    <div>
-                        <label htmlFor="seats" className="block text-sm font-semibold text-gray-100">Number of Seats</label>
-                        <input
-                            type="number"
-                            id="seats"
-                            name="Number_seat"
-                            value={formData.Number_seat}
-                            onChange={handleChange}
-                            className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
-                            required
-                        />
-                    </div>
+                    
 
                     <div>
                         <label htmlFor="pricePerSeats" className="block text-sm font-semibold text-gray-100">Price Per Seat</label>
@@ -323,6 +327,18 @@ const AddBusForm = () => {
                         </select>
                     </div>
 
+                    <div>
+                        <label htmlFor="seats" className="block text-sm font-semibold text-gray-100">Number of Seats</label>
+                        <input
+                            type="number"
+                            id="seats"
+                            name="Number_seat"
+                            value={formData.Number_seat}
+                            onChange={handleChange}
+                            className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
+                            required
+                        />
+                    </div>
                     <div>
                         <label htmlFor="Timing" className="block text-sm font-semibold text-gray-100">Timing</label>
                         <select

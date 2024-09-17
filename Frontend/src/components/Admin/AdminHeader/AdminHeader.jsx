@@ -14,7 +14,7 @@ import { logout } from '../../../Features/Slice';
 function AdminHeader() {
 
   const dispatch = useDispatch()
-const locUser = localStorage.getItem("user")
+const locUser = localStorage.getItem("username")
 const navigate = useNavigate()
 
   const handleLogout = (e) =>{
