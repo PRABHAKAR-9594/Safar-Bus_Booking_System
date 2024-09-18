@@ -23,7 +23,7 @@ export const login = async (req, res) => {
         }
 
         
-        const token=jwt.sign({email:email},server.Secret_code,{expiresIn:200})
+        const token=jwt.sign({email:email},server.Secret_code,{expiresIn:2000})
         res.status(200).send(
         {'Message':'Login successful',
             'name':user.name,

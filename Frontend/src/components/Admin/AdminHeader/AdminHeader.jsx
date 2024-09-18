@@ -19,10 +19,13 @@ const navigate = useNavigate()
 
   const handleLogout = (e) =>{
     e.preventDefault()
+   const Conformation=window.confirm("Are you sure you want to logout?")
+   if(Conformation){
     dispatch(logout())
     localStorage.removeItem("role")
     localStorage.removeItem("Username")
     navigate("/")
+   }
   }
     return (
       
