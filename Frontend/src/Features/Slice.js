@@ -20,6 +20,7 @@ const userSlice = createSlice({
             localStorage.removeItem('username');
             localStorage.removeItem('role');
             localStorage.removeItem('ID')
+            localStorage.removeItem('reloaded')
         },
     },
 });

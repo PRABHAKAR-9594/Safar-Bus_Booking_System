@@ -16,6 +16,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const loginUser = localStorage.getItem("username");
+ 
   
   // Function to check and handle JWT expiration
   useEffect(() => {
@@ -23,6 +24,7 @@ const Header = () => {
 
     const checkTokenExpiry = () => {
       const token = localStorage.getItem(key);
+      
       if (token) {
         try {
           const decodedToken = jwtDecode(token); // Use jwt_decode directly
@@ -32,13 +34,24 @@ const Header = () => {
             console.log("Jwt token expired!");
             localStorage.removeItem(key);
             localStorage.removeItem("Username");
-            window.location.reload(); // Reload the entire page
+            window.location.reload(); 
+            localStorage.removeItem('reloaded')
+            // Reload the entire page
+            dispatch(logout());
           }
         } catch (error) {
           console.log("Error in decoding the Jwt token!", error);
           localStorage.removeItem(key);
-          window.location.reload(); // Reload the entire page
+          window.location.reload();
+          localStorage.removeItem('reloaded')
+          dispatch(logout()); // Reload the entire page
         }
+      }
+      else{
+        localStorage.removeItem('Username'); // Clear local storage
+       localStorage.removeItem('role');
+       localStorage.removeItem('reloaded')
+       dispatch(logout());
       }
     };
 
@@ -57,6 +70,7 @@ const Header = () => {
     dispatch(logout()); // Update Redux state
     localStorage.removeItem('Username'); // Clear local storage
     localStorage.removeItem('role'); // Clear role from local storage
+    localStorage.removeItem('reloaded')
     navigate('/'); // Redirect to home page
   };
 

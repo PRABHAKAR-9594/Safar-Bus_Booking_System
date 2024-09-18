@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import bus_background_logo from '../../assets/bus_background_logo.jpg'; // Import the bus image
 import { useDispatch } from 'react-redux'; // Added useDispatch
 import { setFilter } from '../../Features/FilterSlice'; // Import setFilter from your slice
@@ -7,6 +7,23 @@ import axios from 'axios';
 
 const BusBookingForm=()=> {
   // MailService()
+
+
+    // Check if the page has been refreshed already
+useLayoutEffect(()=>{
+    setInterval(() => {
+     const username=localStorage.getItem('username')
+     
+      
+    if(username){
+    if (!localStorage.getItem('reloaded')) {
+      localStorage.setItem('reloaded', 'true'); // Mark as reloaded
+      window.location.reload(); // Refresh the page
+    }
+  }
+}, 1000);
+})
+  
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState('');

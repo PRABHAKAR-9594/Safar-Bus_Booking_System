@@ -26,7 +26,7 @@ export default function Register() {
     number: '',
     password: '',
   });
-
+const[errormessage,seterrormessage]=useState()
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -111,9 +111,18 @@ Safar customer Support
     try {
       const response = await axios.post('http://localhost:8080/register', register);
       sendOtp(register.email);
+      
 
     } catch (error) {
-      setAlert({ message: 'Registration failed', type: 'error', countdown: 5 });
+      if(error.response){
+      
+     seterrormessage(error.response.data)
+      }
+      setAlert({ message:errormessage.Message, type: 'error', countdown:5 });
+   
+        // setCountdown(0)
+      
+     
     }
   };
 
@@ -181,13 +190,18 @@ Safar customer Support
   useEffect(() => {
     if (alert.message) {
       const interval = setInterval(() => {
-        setCountdown((prev) => prev - 1);
+        setCountdown((prev) => {
+          const newCountdown = prev - 1; // Decrease countdown by 1
+          console.log(newCountdown); // Log the new countdown value
+          return newCountdown;
+        });
       }, 1000);
-
+  
       const timeout = setTimeout(() => {
         setAlert({ message: '', type: '', countdown: 5 });
+        setCountdown(5); // Reset countdown
       }, 5000);
-
+  
       return () => {
         clearInterval(interval);
         clearTimeout(timeout);
@@ -211,7 +225,7 @@ Safar customer Support
             }`}
             role="alert"
           >
-            {alert.message} — Disappearing in {countdown} seconds
+            {alert.message}  Disappearing in {countdown} seconds
           </div>
         )}
 

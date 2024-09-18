@@ -1,3 +1,5 @@
+import { reg_model } from "../models/reg.model.js";
+
 export const verify_reg = (req, res, next) => {
     try {
         if (!req.body.name) {
@@ -27,3 +29,23 @@ export const verify_reg = (req, res, next) => {
         });
     }
 };
+
+//Unique gmail
+
+export const unique_gmail=async(req,res,next)=>{
+    const regGmail=req.body.email
+try{
+const gmail=await reg_model.findOne({email:regGmail})
+if(gmail){
+   return res.status(415).send({"Message":"Gmail already exist !"})
+}
+else{
+    next()
+}
+
+}
+
+catch(error){
+    res.status(400).send({"Message":"Something went wrong !"})
+}
+}

@@ -1,19 +1,20 @@
 
 import nodemailer from 'nodemailer'
+import { server } from './config/server.config.js';
 export const gmail_api=(to,subject,text)=>{
 const gmailauth = nodemailer.createTransport({
         service: "gmail",
         secure : true,
         port : 465,
         auth: {
-            user: "safarofficial4049@gmail.com",
-            pass: "szrv xnzt ulwj qske"
+            user: server.Gmailuser,
+            pass: server.Gmailpass
 
         }
     });
 
     const receiver = {
-        from : "officalsafar@gmail.com",
+        from : server.Gmailuser,
         to : to,
         subject :subject,
         text : text

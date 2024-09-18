@@ -125,7 +125,7 @@ function BusCard({ bus }) {
         </div>
         <div className="flex-1 text-right flex items-center justify-end">
           <FaCheckCircle className="text-green-600 mr-1 text-xl" />
-          <span className="font-bold text-blue-900 text-md">Seats Available: {bus.Number_seat}</span>
+          <span className="font-bold text-blue-900 text-md">Total Seat: {bus.Number_seat}</span>
         </div>
       </div>
 
