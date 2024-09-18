@@ -67,13 +67,18 @@ const Header = () => {
   // Handle logout
   const handleLogout = (e) => {
     e.preventDefault();
+
+    const Conformation=window.confirm("Are you sure you want to logout?")
+    if(Conformation){
+
     dispatch(logout()); // Update Redux state
+
     localStorage.removeItem('Username'); // Clear local storage
     localStorage.removeItem('role'); // Clear role from local storage
     localStorage.removeItem('reloaded')
     navigate('/'); // Redirect to home page
   };
-
+  }
 
   return (
     <header className="fixed top-0 left-0 w-full z-50">

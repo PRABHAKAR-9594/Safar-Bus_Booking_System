@@ -241,6 +241,7 @@ Safar customer Support
             >
               Login
             </button>
+            
             <button
               className={`w-1/2 py-3 text-lg font-semibold text-center ${
                 !isLogin
@@ -251,6 +252,7 @@ Safar customer Support
             >
               Register
             </button>
+            
           </div>
 
           {isLogin ? (
@@ -280,6 +282,17 @@ Safar customer Support
               >
                 LOGIN
               </button>
+              <p className="text-center mt-4 text-gray-700">
+                <a href="/ForgetPassword" className="text-blue-600 hover:underline">
+                  Forgot Password?
+                </a>
+              </p>
+              <p className="text-center mt-4 text-gray-700">
+                Not a member?{' '}
+                <a href="#" className="text-blue-600 hover:underline" onClick={() => setLogin(false)}>
+                  Register Now
+                </a>
+              </p>
             </form>
           ) : !otpSent ? (
             <form className="space-y-6" onSubmit={handleRegSubmit}>
