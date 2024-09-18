@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login } from '../../Features/Slice';
-import { useEffect } from 'react';
 
 export default function Register() {
   const [isLogin, setLogin] = useState(true);
@@ -17,7 +16,10 @@ export default function Register() {
     number: '',
     password: '',
   });
-
+  const [otp, setOtp] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState(''); // State to store generated OTP
+  const [otpSent, setOtpSent] = useState(false); // State to track OTP sent status
+  const [otpVerified, setOtpVerified] = useState(false); // State to track OTP verification
   const [validationErrors, setValidationErrors] = useState({
     name: '',
     email: '',
@@ -40,27 +42,18 @@ export default function Register() {
   // Form validation
   const validateForm = () => {
     let errors = {};
-    // Name validation
     if (register.name.length < 3 || register.name.length > 50) {
       errors.name = 'Name must be between 3 and 50 characters.';
     }
-
-    // Email validation
     if (!/\S+@\S+\.\S+/.test(register.email)) {
       errors.email = 'Please enter a valid email address.';
     }
-
-    // Contact number validation
     if (!/^\d{10}$/.test(register.number)) {
       errors.number = 'Please enter a valid 10-digit contact number.';
     }
-
-    // Password length validation
     if (register.password.length < 8 || register.password.length > 128) {
       errors.password = 'Password must be between 8 and 128 characters.';
     }
-
-    // Password strength validation
     if (
       !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/.test(
         register.password
@@ -74,6 +67,42 @@ export default function Register() {
     return Object.keys(errors).length === 0;
   };
 
+  // OTP generation function
+  const generateOtp = () => {
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    setGeneratedOtp(otp);
+    return otp;
+  };
+
+  // Function to send OTP after successful registration
+  const sendOtp = async (email) => {
+    const otp = generateOtp();
+    try {
+      // Assuming your backend endpoint for sending OTP is /send-otp
+   const text=  `Dear ${register.name},
+
+Thank you for registering with Safar. To complete your account verification, please use the following One-Time Password (OTP):
+
+Your OTP: ${otp}
+
+This OTP is valid for the next 10 min. Please enter it on the verification page to confirm your email address and activate your account.
+
+If you did not request this, please ignore this email.
+
+Thank you for choosing Safar. We're excited to have you with us!
+
+Best regards,
+Safar customer Support 
+`
+      await axios.post('http://localhost:8080/sendGmail', { text:text,gmail:email,Subject:'Your OTP for Email Verification' });
+      setOtpSent(true);
+      setAlert({ message: 'OTP sent to your email. Please verify.', type: 'success', countdown: 5 });
+    } catch (error) {
+      setAlert({ message: 'Failed to send OTP', type: 'error', countdown: 5 });
+    }
+  };
+
+  // Handle Registration and send OTP
   const handleRegSubmit = async (e) => {
     e.preventDefault();
 
@@ -81,13 +110,26 @@ export default function Register() {
 
     try {
       const response = await axios.post('http://localhost:8080/register', register);
-      setAlert({ message: "Registered Successfull , Now Login !", type: 'success', countdown: 5 });
-      setCountdown(5)
-      navigate('/');
+      sendOtp(register.email);
+
     } catch (error) {
-      setAlert({ message: 'Registration failed ' , type: 'success', countdown: 5 });
-      setCountdown(5)
-      alert();
+      setAlert({ message: 'Registration failed', type: 'error', countdown: 5 });
+    }
+  };
+
+  // Handle OTP submission and verification
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+    if (otp === generatedOtp) {
+      setOtpVerified(true);
+      setAlert({ message: 'OTP verified successfully!', type: 'success', countdown: 5 });
+      setAlert({ message: 'Registration Done Successfully !', type: 'success', countdown: 5 });
+      setTimeout(() => {
+        navigate('/');
+      }, 5000)
+     
+    } else {
+      setAlert({ message: 'Invalid OTP. Please try again.', type: 'error', countdown: 5 });
     }
   };
 
@@ -115,14 +157,13 @@ export default function Register() {
       const loginUser = response.data.name;
       const role = response.data.userType;
       const userId = response.data.userId;
-      const Gmail= response.data.email
-      console.log(Gmail);
-      
-            localStorage.setItem('username', loginUser);
-            localStorage.setItem('role', role);
-            localStorage.setItem('token', token);
-            localStorage.setItem('ID',userId)
-            localStorage.setItem('Gmail',Gmail)
+      const Gmail = response.data.email;
+
+      localStorage.setItem('username', loginUser);
+      localStorage.setItem('role', role);
+      localStorage.setItem('token', token);
+      localStorage.setItem('ID', userId);
+      localStorage.setItem('Gmail', Gmail);
 
       dispatch(login(loginUser));
 
@@ -131,13 +172,12 @@ export default function Register() {
       } else {
         navigate('/');
       }
-      setAlert({ message: "Login Successfull !", type: 'success', countdown: 5 });
-      setCountdown(5)
+      setAlert({ message: 'Login Successful!', type: 'success', countdown: 5 });
     } catch (error) {
-      setAlert({ message: 'Invalid Email or Password !' , type: 'error', countdown: 5 });
-      setCountdown(5)
+      setAlert({ message: 'Invalid Email or Password!', type: 'error', countdown: 5 });
     }
   };
+
   useEffect(() => {
     if (alert.message) {
       const interval = setInterval(() => {
@@ -165,15 +205,15 @@ export default function Register() {
           &larr;
         </button>
         {alert.message && (
-        <div
-          className={`absolute top-2 right-0 p-4 text-sm text-white rounded-lg shadow-lg transition-opacity duration-300 ${
-            alert.type === 'success' ? 'bg-green-500' : 'bg-red-500'
-          }`}
-          role="alert"
-        >
-          {alert.message} — Disappearing in {countdown} seconds
-        </div>
-      )}
+          <div
+            className={`absolute top-2 right-0 p-4 text-sm text-white rounded-lg shadow-lg transition-opacity duration-300 ${
+              alert.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+            }`}
+            role="alert"
+          >
+            {alert.message} — Disappearing in {countdown} seconds
+          </div>
+        )}
 
         <div className="mt-12">
           <div className="flex border-b border-gray-300 mb-6">
@@ -220,22 +260,14 @@ export default function Register() {
                 required
               />
               {validationErrors.password && <small className="text-red-600">{validationErrors.password}</small>}
-              <button type="submit" className="w-full py-3 text-lg font-semibold text-white bg-blue-800 rounded-lg shadow-md hover:bg-blue-900 transition-colors">
+              <button
+                type="submit"
+                className="w-full py-3 text-lg font-semibold text-white bg-blue-800 rounded-lg shadow-md hover:bg-blue-900 transition-colors"
+              >
                 LOGIN
               </button>
-              <p className="text-center mt-4 text-gray-700">
-                <a href="/ForgetPassword" className="text-blue-600 hover:underline">
-                  Forgot Password?
-                </a>
-              </p>
-              <p className="text-center mt-4 text-gray-700">
-                Not a member?{' '}
-                <a href="#" className="text-blue-600 hover:underline" onClick={() => setLogin(false)}>
-                  Register Now
-                </a>
-              </p>
             </form>
-          ) : (
+          ) : !otpSent ? (
             <form className="space-y-6" onSubmit={handleRegSubmit}>
               <h2 className="text-3xl font-extrabold text-center mb-4 text-blue-800">Register</h2>
               <input
@@ -278,8 +310,30 @@ export default function Register() {
                 required
               />
               {validationErrors.password && <small className="text-red-600">{validationErrors.password}</small>}
-              <button type="submit" className="w-full py-3 text-lg font-semibold text-white bg-blue-800 rounded-lg shadow-md hover:bg-blue-900 transition-colors">
+              <button
+                type="submit"
+                className="w-full py-3 text-lg font-semibold text-white bg-blue-800 rounded-lg shadow-md hover:bg-blue-900 transition-colors"
+              >
                 REGISTER
+              </button>
+            </form>
+          ) : (
+            <form className="space-y-6" onSubmit={handleOtpSubmit}>
+              <h2 className="text-3xl font-extrabold text-center mb-4 text-blue-800">Enter OTP</h2>
+              <input
+                type="text"
+                name="otp"
+                placeholder="Enter OTP"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                className="w-full p-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-shadow"
+                required
+              />
+              <button
+                type="submit"
+                className="w-full py-3 text-lg font-semibold text-white bg-blue-800 rounded-lg shadow-md hover:bg-blue-900 transition-colors"
+              >
+                VERIFY OTP
               </button>
             </form>
           )}

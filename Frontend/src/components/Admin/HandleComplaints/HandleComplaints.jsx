@@ -84,7 +84,7 @@ const HandleComplaintsPage = () => {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex flex-col items-center justify-center">
           <label htmlFor="busNumber" className="block text-sm font-semibold text-white text-center">
-            Bus Number / Name
+            Bus Number
           </label>
           <input
             type="text"
