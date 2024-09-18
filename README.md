@@ -2,7 +2,6 @@
 # MEARN Stack Bus Booking Application
 
 ## Overview
-
 This is a MEARN stack (MongoDB, Express.js, React, Node.js) bus booking application. It provides a robust solution for managing bus bookings with various features including secure login, OTP verification, and ticketing. The application aims to offer a seamless experience for users looking to book bus tickets online.
 
 ## Features
@@ -26,7 +25,7 @@ This is a MEARN stack (MongoDB, Express.js, React, Node.js) bus booking applicat
 
    ```bash
    git clone https://github.com/CODE-WITH-PRABHAKR/Safar-Bus_Booking_System.git
-   cd bus-booking-app
+   cd Safar-Bus_Booking_System
    ```
 
 2. **Install Dependencies**
