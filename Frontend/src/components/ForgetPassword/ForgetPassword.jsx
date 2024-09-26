@@ -31,11 +31,10 @@ If you did not request this, please ignore this email.
 
 Thank you,
 Safar Support Team`; // Use the generated OTP here
-                const gmail = localStorage.getItem('Gmail'); // Use the correct key to retrieve email from localStorage
-
+                
                 await axios.post('http://localhost:8080/sendGmail', {
                     text: text,
-                    gmail: gmail,
+                    gmail: email,
                     Subject: subject
                 });
                 setIsOtpVerified(false); // Reset OTP verification status
