@@ -73,8 +73,8 @@ function BusResultsPage() {
     const matchesNight = filters.isNight && bus.Timing === 'Night';
     const matchesDayorNight = (!filters.isDay && !filters.isNight) || matchesDay || matchesNight;
 
-    const matchesFoodAvailable = filters.isFoodAvailable && bus.Food_Facility === 'Avaliable';
-    const matchesFoodNotAvailable = filters.isFoodNotAvailable && bus.Food_Facility === 'Not-Avalible';
+    const matchesFoodAvailable = filters.isFoodAvailable && bus.Food_Facility === 'Available';
+    const matchesFoodNotAvailable = filters.isFoodNotAvailable && bus.Food_Facility === 'Not Available';
     const matchesFoodAvailableOrNot = (!filters.isFoodAvailable && !filters.isFoodNotAvailable) || matchesFoodAvailable || matchesFoodNotAvailable;
 
     return (

@@ -45,9 +45,9 @@ const init = async () => {
         return
     }
     try {
-        admin_user = await reg_model.create({
+       const admin_user = await reg_model.create({
             name: 'Safar',
-            email: 'admin@gmail.com',
+            email: 'ADMIN@GMAIL.COM',
             password: bcryptjs.hashSync("admin@123", 8),
             mobNum : 1234567890,
             userType: 'ADMIN'
@@ -57,7 +57,7 @@ const init = async () => {
 
     }
     catch (error) {
-        console.log("Error while creating the admin ");
+        console.log("Error while creating the admin ",error);
 
     }
 

@@ -2,6 +2,12 @@ import { reg_model } from "../models/reg.model.js";
 
 export const verify_reg = (req, res, next) => {
     try {
+
+        if (req.body.email) {
+            req.body.email = req.body.email.toUpperCase();
+          }
+
+
         if (!req.body.name) {
             return res.status(400).send({
                 message: 'Failed! Name was not provided in request body'

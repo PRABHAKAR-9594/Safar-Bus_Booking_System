@@ -121,7 +121,7 @@ function BusCard({ bus }) {
           <span className={`font-semibold text-md ${bus.Bus_type === 'AC' ? 'text-green-600' : 'text-red-600'}`}>
             {bus.Bus_type === 'AC' ? 'AC' : 'Non-AC'}
           </span> | {bus.Bus_Class} | 
-          {foodFacility === 'Avaliable' ? <span className='text-green-600'>Food Available</span> : <span className='text-red-600'>No Food</span>}
+          {foodFacility === 'Available' ? <span className='text-green-600'>Food Available</span> : <span className='text-red-600'>No Food</span>}
         </div>
         <div className="flex-1 text-right flex items-center justify-end">
           <FaCheckCircle className="text-green-600 mr-1 text-xl" />

@@ -25,7 +25,7 @@ function selectDayOrNight(time) {
     const [hours, minutes] = time.split(":")
     
     // Check if time is between 4:00 and 7:00 (inclusive of 4:00 and 7:00)
-    if (hours >= 4 && hours < 7){
+    if (hours >= 4 && hours < 19){
         formData.Timing='Day'
     } else {
         formData.Timing='Night'
@@ -44,7 +44,7 @@ selectDayOrNight(formData.Source_time)
     }
 
     const locations = [
-        "Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune", "Thane", "Prayagraj",
+        "Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune","Thane","Pryagraj","Kalyan","Pune","Nashik","Bhusawal","Jaunpur","Janghai","Pratapgad","Vanarsi","Ayodhya"
         // Add other locations here
     ];
 
