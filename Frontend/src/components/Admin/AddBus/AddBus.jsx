@@ -113,14 +113,53 @@ selectDayOrNight(formData.Source_time)
             'x-access-token': token,
         },
     });
-
+    // if (formData.Seat_price < 0) {
+    //     setAlert({ message: "Seat price cannot be negative", type: 'error', countdown: 5 });
+    //     return; // Stop submission if seat price is invalid
+    // }
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
+    
+        // Regular expression to match non-negative integers only (0 or greater, no decimals)
+        const validSeatPricePattern = /^\d*$/;
+    
+        // Prevent negative values and decimals for Seat_price
+        if (name === "Seat_price") {
+            if (value === '' || validSeatPricePattern.test(value)) {
+                setFormData(prevData => {
+                    const newData = { ...prevData, [name]: value }; // Update state only if the value is valid
+                    
+                    // Validate Source_time and Destination_time
+                    if (newData.Source_time === newData.Destination_time) {
+                        setAlert({ message: "Source time and Destination time cannot be the same", type: 'error', countdown: 5 });
+                    }
+    
+                    return newData;
+                });
+            } else {
+                setAlert({ message: "Price cannot be negative or a decimal", type: 'error' });
+                setFormData(prevData => ({
+                    ...prevData,
+                    Seat_price: '' // Clear the field if an invalid value is entered
+                }));
+            }
+        } else {
+            // Update the state for all other fields
+            setFormData(prevData => {
+                const newData = { ...prevData, [name]: value }; // Update the state
+               
+                // Validate Source_time and Destination_time
+                if (newData.Source_time === newData.Destination_time) {
+                    setAlert({ message: "Source time and Destination time cannot be the same", type: 'error', countdown: 5 });
+                }
+    
+                return newData;
+            });
+        }
     };
+    
+    
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -151,6 +190,26 @@ selectDayOrNight(formData.Source_time)
         }
     }, [alert.message]);
 
+
+
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+    
+    //     // Prevent negative values for Seat_price
+    //     if (name === "Seat_price" && value < 0) {
+    //         setFormData(prevData => ({
+    //             ...prevData,
+    //             Seat_price: '' // Clear the field if negative value is entered
+    //         }));
+    //         setAlert({ message: "Price cannot be negative", type: 'error', countdown: 5 });
+    //     } else {
+    //         setFormData({
+    //             ...formData,
+    //             [name]: value
+    //         });
+    //     }
+    // };
+
     return (
         <div className="relative p-4 mt-1 mb-2 max-w-6xl mx-auto bg-gradient-to-r from-blue-500 via-teal-500 to-purple-500 shadow-lg rounded-3xl">
             <h2 className="text-3xl font-extrabold text-white mb-6 text-center">Add New Bus</h2>
@@ -162,7 +221,7 @@ selectDayOrNight(formData.Source_time)
                         }`}
                     role="alert"
                 >
-                    {alert.message} — Disappearing in {countdown} seconds
+                    {alert.message +"   !"} 
                 </div>
             )}
 

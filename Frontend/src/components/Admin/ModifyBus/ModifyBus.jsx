@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+
 const EditBusForm = () => {
   const [busSearch, setBusSearch] = useState('');
   const [formData, setFormData] = useState(null);
+  const [alert, setAlert] = useState({ message: '', type: '' });
 
   const handleSearchChange = (e) => {
     setBusSearch(e.target.value);
@@ -16,30 +18,89 @@ const EditBusForm = () => {
     },
   });
 
-
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
-    // Simulate searching for the bus by number or name
-    // Replace this with actual logic to fetch the bus data
-    const foundBus = await api.post('/businfo',{'Bus_number':busSearch})
-    const busDetails = foundBus.data
-    setFormData(busDetails); // Set the bus details in form
+    const foundBus = await api.post('/businfo', { 'Bus_number': busSearch });
+    const busDetails = foundBus.data;
+    setFormData(busDetails);
   };
 
   const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const { name, value } = e.target;
 
-  const handleFormSubmit = async(e) => {
+  // Regular expression to match non-negative integers only (0 or greater, no decimals)
+  const validSeatPricePattern = /^\d*$/;
+
+  // Update Number_seat based on selected Bus_Class
+  if (name === 'Bus_Class') {
+    setFormData(prevData => {
+      const newData = { ...prevData, [name]: value };
+      // Set Number_seat based on Bus_Class selection
+      newData.Number_seat = value === 'Sleeper' ? 48 : 32; // Sleeper has 48 seats, Sitting has 32 seats
+      return newData;
+    });
+  } else {
+    // Prevent negative values and decimals for Seat_price
+    if (name === "Seat_price") {
+      if (value === '' || validSeatPricePattern.test(value)) {
+        setFormData(prevData => {
+          const newData = { ...prevData, [name]: value };
+
+          // Validate Source_time and Destination_time
+          if (newData.Source_time === newData.Destination_time) {
+            setAlert({ message: "Source time and Destination time cannot be the same", type: 'error', countdown: 5 });
+          }
+
+          return newData;
+        });
+      } else {
+        setAlert({ message: "Price cannot be negative or a decimal", type: 'error' });
+        setFormData(prevData => ({
+          ...prevData,
+          Seat_price: '' // Clear the field if an invalid value is entered
+        }));
+      }
+    } else {
+      // Update the state for all other fields
+      setFormData(prevData => {
+        const newData = { ...prevData, [name]: value }; // Update the state
+
+        // Validate Source_time and Destination_time
+        if (newData.Source_time === newData.Destination_time) {
+          setAlert({ message: "Source time and Destination time cannot be the same", type: 'error', countdown: 5 });
+        }
+
+        return newData;
+      });
+    }
+  }
+};
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-   
-    const ModifyBus = await api.post('/modifybus',{...formData})
-    console.log('Edited bus details:', ModifyBus.data);
+    try {
+      const ModifyBus = await api.post('/modifybus', { ...formData });
+      console.log('Edited bus details:', ModifyBus.data);
+      setAlert({ message: 'Bus details updated successfully', type: 'success' });
+    } catch (error) {
+      setAlert({ message: 'Error updating bus details', type: 'error' });
+    }
   };
 
   return (
     <div className="min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('https://source.unsplash.com/1600x900/?bus,city')" }}>
+      <div className="bg-black bg-opacity-50 p-4 min-h-screen flex flex-col justify-center items-center">
+        {alert.message && (
+          <div
+            className={`absolute top-4 right-4 p-4 text-sm text-white rounded-lg shadow-lg transition-opacity duration-300 ${alert.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}
+            role="alert"
+          >
+            {alert.message + " !"}
+          </div>
+        )}
+
+    
+    <div>
       <div className="bg-black bg-opacity-50 p-4 min-h-screen flex flex-col justify-center items-center">
         <div className="bg-white p-8 shadow-lg rounded-2xl max-w-lg w-full">
           <h2 className="text-3xl font-extrabold text-gray-800 text-center mb-6">Search for Bus to Edit</h2>
@@ -233,6 +294,8 @@ const EditBusForm = () => {
           </div>
         )}
       </div>
+    </div>
+    </div>
     </div>
   );
 };
