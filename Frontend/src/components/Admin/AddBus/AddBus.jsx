@@ -10,7 +10,7 @@ const AddBusForm = () => {
         Source: '',
         Destination: '',
         Source_time: '',
-        Destination_time: '',
+        Destination_time: '00:00',
         Bus_type: '',
         Bus_Class: '',
         Timing: '',
@@ -44,7 +44,7 @@ selectDayOrNight(formData.Source_time)
     }
 
     const locations = [
-        "Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune","Thane","Pryagraj","Kalyan","Pune","Nashik","Bhusawal","Jaunpur","Janghai","Pratapgad","Vanarsi","Ayodhya"
+        "Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune","Thane","Pryagraj","Kalyan","Pune","Nashik","Bhusawal","Jaunpur","Janghai","Pratapgad","Vanarsi","Ayodhya","Ulhasnagar"
         // Add other locations here
     ];
 
@@ -152,7 +152,6 @@ selectDayOrNight(formData.Source_time)
                 if (newData.Source_time === newData.Destination_time) {
                     setAlert({ message: "Source time and Destination time cannot be the same", type: 'error', countdown: 5 });
                 }
-    
                 return newData;
             });
         }
@@ -164,12 +163,16 @@ selectDayOrNight(formData.Source_time)
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            if(formData.Source == formData.Destination){
+                alert("Source and Destination are not same !")
+            }
             const response = await api.post('/addbus', formData);
             setAlert({ message: "Bus Added Successfully!", type: 'success', countdown: 5 });
             setCountdown(5);
         } catch (error) {
-            setAlert({ message: "Bus number already exists!", type: 'error', countdown: 5 });
+            setAlert({ message: "Something went wrong please check !", type: 'error', countdown: 5 });
             setCountdown(5);
+            
         }
     };
 
@@ -407,6 +410,7 @@ selectDayOrNight(formData.Source_time)
                             onChange={handleChange}
                             className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
                             required
+    
                         >
                             <option value="" disabled>Select Bus Timing</option>
                             <option value="Day">Day</option>

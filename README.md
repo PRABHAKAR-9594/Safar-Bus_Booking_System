@@ -2,7 +2,7 @@
 # SAFAR – BUS RESERVATION PORTAL (MERN)
 
 ## Overview
-This is a MEARN stack (MongoDB, Express.js, React, Node.js) bus booking application. It provides a robust solution for managing bus bookings with various features including secure login, OTP verification, and ticketing. The application aims to offer a seamless experience for users looking to book bus tickets online.
+This is a MERN stack (MongoDB, Express.js, React, Node.js) bus booking application. It provides a robust solution for managing bus bookings with various features including secure login, OTP verification, and ticketing. The application aims to offer a seamless experience for users looking to book bus tickets online.
 
 ## Features
 
@@ -37,12 +37,10 @@ This is a MEARN stack (MongoDB, Express.js, React, Node.js) bus booking applicat
    cd Server
    npm install
 
+
    # Frontend
    cd ../Frontend
    npm install
-   ```
-
-
 3. **Run the Application**
 
    Start the backend server:

@@ -16,6 +16,23 @@ const CardPayment = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+    if (/^(0[1-9]|1[0-2])\/\d{2}$/.test(value)) {
+      const [month, year] = value.split('/').map(Number);
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1;
+      const currentYear = currentDate.getFullYear() % 100;
+
+      // Check if date is expired
+      if (year > currentYear || (year === currentYear && month >= currentMonth)) {
+        setCardDetails({ expiryDate: value });
+      } else {
+        newErrors.expiryDate = 'Invalid expiry date';
+      }
+    } else {
+      setCardDetails({ expiryDate: value });
+    }
+
+
     // Validation and formatting for specific fields
     if (name === 'cardNumber') {
       const formattedValue = value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
@@ -137,14 +154,14 @@ const CardPayment = () => {
           {errors.holderName && <p className="text-red-500 text-sm">{errors.holderName}</p>}
           
           <input 
-            type="text" 
-            name="expiryDate" 
-            placeholder="MM/YY" 
-            className="block w-full p-3 rounded-lg border border-gray-300 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-3"
-            onChange={handleChange} 
-            value={cardDetails.expiryDate}
-            maxLength="5"
-          />
+      type="text" 
+      name="expiryDate" 
+      placeholder="MM/YY" 
+      className="block w-full p-3 rounded-lg border border-gray-300 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-3"
+      onChange={handleChange} 
+      value={cardDetails.expiryDate}
+      maxLength="5"
+    />
           {errors.expiryDate && <p className="text-red-500 text-sm">{errors.expiryDate}</p>}
           
           <input 

@@ -56,7 +56,11 @@ useLayoutEffect(()=>{
 
   const locations = [
     // List of locations
+<<<<<<< HEAD
+    "Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune","Thane","Pryagraj","Kalyan","Nashik","Bhusawal","Jaunpur","Janghai","Pratapgad","Vanarsi","Ayodhya","Ulhasnagar"
+=======
     "Khadvali","Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune","Thane","Pryagraj","Kalyan","Pune","Nashik","Bhusawal","Jaunpur","Janghai","Pratapgad","Vanarsi","Ayodhya"
+>>>>>>> 01f8ccdceca987e2d1974a1b675c2be9bbae2216
     // Add other locations here
   ];
 
