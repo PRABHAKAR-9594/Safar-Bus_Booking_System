@@ -16,6 +16,9 @@ const ViewRevenueForm = () => {
   const [revenueData, setRevenueData] = useState(null);
   const [totalRevenue, setTotalRevenue] = useState(0);
 
+  // Get today's date in YYYY-MM-DD format for the max limit on end date
+  const today = new Date().toISOString().split('T')[0];
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -144,6 +147,8 @@ const ViewRevenueForm = () => {
               name="endDate"
               value={formData.endDate}
               onChange={handleChange}
+              min={formData.startDate}  // Set min to start date
+              max={today}               // Set max to today's date
               className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 text-gray-900"
               required
             />

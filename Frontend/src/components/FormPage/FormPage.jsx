@@ -51,27 +51,41 @@ const PassengerDetailsForm = () => {
   };
 
   const validateField = (field, value, errors) => {
-    switch (field) {
-      case 'name':
-        errors.name = value.length < 3 ? 'Full name must be at least 3 characters' : '';
-        break;
-      case 'age':
-        errors.age = value < 1 || value > 120 ? 'Age must be between 1 and 120' : '';
-        break;
-      case 'gender':
-        errors.gender = value === '' ? 'Gender is required' : '';
-        break;
-      case 'mobile':
-        errors.mobile = !/^\d{10}$/.test(value) ? 'Mobile number must be a valid 10-digit number' : '';
-        break;
-      case 'address':
-        errors.address = value.length < 10 ? 'Address must be at least 10 characters' : '';
-        break;
-      default:
-        break;
-    }
-    return errors;
-  };
+  switch (field) {
+    case 'name':
+      errors.name = value.length < 3
+        ? 'Full name must be at least 3 characters'
+        : !/^[A-Za-z\s]+$/.test(value)
+          ? 'Name must contain only alphabets'
+          : '';
+      break;
+    case 'age':
+      errors.age = isNaN(value) || value < 1 
+        ? 'Age must be a valid number between 1 and 120'
+        : '';
+      break;
+    case 'gender':
+      errors.gender = value === ''
+        ? 'Gender is required'
+        : !['male', 'female', 'other'].includes(value.toLowerCase())
+          ? 'Gender must be either Male, Female, or Other'
+          : '';
+      break;
+    case 'mobile':
+      errors.mobile = !/^[1-9]\d{9}$/.test(value)
+        ? 'Mobile number must be a valid 10-digit number without leading zeros'
+        : '';
+      break;
+    case 'address':
+      errors.address = value.length < 10
+        ? 'Address must be at least 10 characters'
+        : '';
+      break;
+    default:
+      break;
+  }
+  return errors;
+};
 
   const scrollToError = () => {
     const firstErrorField = document.querySelector('.error');
@@ -105,6 +119,10 @@ const PassengerDetailsForm = () => {
         updatedDetails[index].errors.address
       ) {
         isValid = false;
+      }
+
+      if(passengerDetails.age <=0){
+        alert("Please enter the valid age !")
       }
     });
 
