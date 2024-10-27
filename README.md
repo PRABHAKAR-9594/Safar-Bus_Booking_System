@@ -1,8 +1,8 @@
 
-# MEARN Stack Bus Booking Application
+# MERN Stack Bus Booking Application
 
 ## Overview
-This is a MEARN stack (MongoDB, Express.js, React, Node.js) bus booking application. It provides a robust solution for managing bus bookings with various features including secure login, OTP verification, and ticketing. The application aims to offer a seamless experience for users looking to book bus tickets online.
+This is a MERN stack (MongoDB, Express.js, React, Node.js) bus booking application. It provides a robust solution for managing bus bookings with various features including secure login, OTP verification, and ticketing. The application aims to offer a seamless experience for users looking to book bus tickets online.
 
 ## Features
 
@@ -34,42 +34,31 @@ This is a MEARN stack (MongoDB, Express.js, React, Node.js) bus booking applicat
 
    ```bash
    # Backend
-   cd backend
+   cd Server
    npm install
+
 
    # Frontend
-   cd ../frontend
-   npm install
+   cd ../Frontend
+   npm i
+   
    ```
 
-3. **Configure Environment Variables**
 
-   Create a `.env` file in the `backend` directory and add the following variables:
 
-   ```env
-   PORT=8080
-   MONGO_URI=mongodb://localhost:27017/busbooking
-   JWT_SECRET=your_jwt_secret
-   EMAIL_SERVICE=your_email_service
-   EMAIL_USER=your_email@example.com
-   EMAIL_PASS=your_email_password
-   ```
-
-   Update the `frontend/.env` file if needed with API base URL or other settings.
-
-4. **Run the Application**
+3. **Run the Application**
 
    Start the backend server:
 
    ```bash
-   cd backend
+   cd Server
    npm start
    ```
 
    Start the frontend development server:
 
    ```bash
-   cd ../frontend
+   cd ../Frontend
    npm run dev
    ```
 

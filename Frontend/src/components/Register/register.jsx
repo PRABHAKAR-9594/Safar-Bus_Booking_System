@@ -109,7 +109,7 @@ Safar customer Support
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post('http://localhost:8080/register', register);
+     
       sendOtp(register.email);
       
 
@@ -131,6 +131,7 @@ Safar customer Support
     e.preventDefault();
     if (otp === generatedOtp) {
       setOtpVerified(true);
+      const response = await axios.post('http://localhost:8080/register', register);
       setAlert({ message: 'OTP verified successfully!', type: 'success', countdown: 5 });
       setAlert({ message: 'Registration Done Successfully !', type: 'success', countdown: 5 });
       setTimeout(() => {
