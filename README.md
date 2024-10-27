@@ -1,5 +1,5 @@
 
-# MEARN Stack Bus Booking Application
+# SAFAR – BUS RESERVATION PORTAL (MERN)
 
 ## Overview
 This is a MEARN stack (MongoDB, Express.js, React, Node.js) bus booking application. It provides a robust solution for managing bus bookings with various features including secure login, OTP verification, and ticketing. The application aims to offer a seamless experience for users looking to book bus tickets online.
@@ -17,7 +17,7 @@ This is a MEARN stack (MongoDB, Express.js, React, Node.js) bus booking applicat
 
 - Node.js and npm installed on your machine.
 - MongoDB server running locally or remotely.
-- An email service setup for sending OTPs and tickets (e.g., SMTP server).
+- An email service setup for sending OTPs and tickets (e.g., Nodemailer server).
 
 ### Setup
 
@@ -34,42 +34,28 @@ This is a MEARN stack (MongoDB, Express.js, React, Node.js) bus booking applicat
 
    ```bash
    # Backend
-   cd backend
+   cd Server
    npm install
 
    # Frontend
-   cd ../frontend
+   cd ../Frontend
    npm install
    ```
 
-3. **Configure Environment Variables**
 
-   Create a `.env` file in the `backend` directory and add the following variables:
-
-   ```env
-   PORT=8080
-   MONGO_URI=mongodb://localhost:27017/busbooking
-   JWT_SECRET=your_jwt_secret
-   EMAIL_SERVICE=your_email_service
-   EMAIL_USER=your_email@example.com
-   EMAIL_PASS=your_email_password
-   ```
-
-   Update the `frontend/.env` file if needed with API base URL or other settings.
-
-4. **Run the Application**
+3. **Run the Application**
 
    Start the backend server:
 
    ```bash
-   cd backend
+   cd Server
    npm start
    ```
 
    Start the frontend development server:
 
    ```bash
-   cd ../frontend
+   cd ../Frontend
    npm run dev
    ```
 
@@ -89,7 +75,49 @@ This is a MEARN stack (MongoDB, Express.js, React, Node.js) bus booking applicat
 Feel free to contribute to this project by submitting issues, feature requests, or pull requests. Ensure that you follow the project's coding standards and guidelines.
 
 
+
+## HOME PAGE
+![HOME PAGE ](./Frontend/PHOTOS/HOME.png)
+
+## BUS PAGE
+![BUS PAGE ](./Frontend/PHOTOS/BUS.png)
+
+## SEAT PAGE
+
+![HOME PAGE ](./Frontend/PHOTOS/SEAT.png)
+
+## PASSENGER DETAILS PAGE
+
+![HOME PAGE ](./Frontend/PHOTOS/PASSENGERDETAILS.png)
+
+## PAYMENT
+
+![HOME PAGE ](./Frontend/PHOTOS/PAYMENT.png)
+
+## RECEIPT
+
+![HOME PAGE ](./Frontend/PHOTOS/RECEIPT.png)
+
+## BOOKING CONFORMATION ON MAIL
+
+![HOME PAGE ](./Frontend/PHOTOS/BOOKINGCNF.png)
+
+## TICKET
+
+![HOME PAGE ](./Frontend/PHOTOS/TICKET.png)
+
+## CONTACT US
+
+![HOME PAGE ](./Frontend/PHOTOS/CONTACACTUS.png)
+
+## ADMIN DASHBOARD
+![HOME PAGE ](./Frontend/PHOTOS/ADMIN.png)
+
+
+
+
+
 ## Contact
 
-For any questions or support, please contact [mauryaprabhakar677@gmail.com].
+For any questions or support, please contact [mauryaprabhakar677@gmail.com , dineshpadhi16@gmail.com].
 
