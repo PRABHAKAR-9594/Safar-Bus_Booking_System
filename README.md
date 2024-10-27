@@ -1,5 +1,5 @@
 
-# MERN Stack Bus Booking Application
+# SAFAR – BUS RESERVATION PORTAL (MERN)
 
 ## Overview
 This is a MERN stack (MongoDB, Express.js, React, Node.js) bus booking application. It provides a robust solution for managing bus bookings with various features including secure login, OTP verification, and ticketing. The application aims to offer a seamless experience for users looking to book bus tickets online.
@@ -17,7 +17,7 @@ This is a MERN stack (MongoDB, Express.js, React, Node.js) bus booking applicati
 
 - Node.js and npm installed on your machine.
 - MongoDB server running locally or remotely.
-- An email service setup for sending OTPs and tickets (e.g., SMTP server).
+- An email service setup for sending OTPs and tickets (e.g., Nodemailer server).
 
 ### Setup
 
@@ -40,12 +40,7 @@ This is a MERN stack (MongoDB, Express.js, React, Node.js) bus booking applicati
 
    # Frontend
    cd ../Frontend
-   npm i
-   
-   ```
-
-
-
+   npm install
 3. **Run the Application**
 
    Start the backend server:
@@ -78,7 +73,49 @@ This is a MERN stack (MongoDB, Express.js, React, Node.js) bus booking applicati
 Feel free to contribute to this project by submitting issues, feature requests, or pull requests. Ensure that you follow the project's coding standards and guidelines.
 
 
+
+## HOME PAGE
+![HOME PAGE ](./Frontend/PHOTOS/HOME.png)
+
+## BUS PAGE
+![BUS PAGE ](./Frontend/PHOTOS/BUS.png)
+
+## SEAT PAGE
+
+![HOME PAGE ](./Frontend/PHOTOS/SEAT.png)
+
+## PASSENGER DETAILS PAGE
+
+![HOME PAGE ](./Frontend/PHOTOS/PASSENGERDETAILS.png)
+
+## PAYMENT
+
+![HOME PAGE ](./Frontend/PHOTOS/PAYMENT.png)
+
+## RECEIPT
+
+![HOME PAGE ](./Frontend/PHOTOS/RECEIPT.png)
+
+## BOOKING CONFORMATION ON MAIL
+
+![HOME PAGE ](./Frontend/PHOTOS/BOOKINGCNF.png)
+
+## TICKET
+
+![HOME PAGE ](./Frontend/PHOTOS/TICKET.png)
+
+## CONTACT US
+
+![HOME PAGE ](./Frontend/PHOTOS/CONTACACTUS.png)
+
+## ADMIN DASHBOARD
+![HOME PAGE ](./Frontend/PHOTOS/ADMIN.png)
+
+
+
+
+
 ## Contact
 
-For any questions or support, please contact [mauryaprabhakar677@gmail.com].
+For any questions or support, please contact [mauryaprabhakar677@gmail.com , dineshpadhi16@gmail.com].
 
