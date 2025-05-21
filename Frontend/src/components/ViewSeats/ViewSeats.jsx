@@ -25,7 +25,7 @@ const SeatSelection = () => {
     // Fetch the booked seat data when component mounts
     const fetchBookedSeats = async () => {
       try {
-        const response = await axios.post('http://localhost:8080/seatData', {
+        const response = await axios.post('https://safar-bus-booking-system.onrender.com/seatData', {
           BusNumber: busNumber, // Example BusNumber, you can dynamically set this
           Date: Date,
         });

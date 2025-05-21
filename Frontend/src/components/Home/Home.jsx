@@ -5,29 +5,23 @@ import { setFilter } from '../../Features/FilterSlice'; // Import setFilter from
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const BusBookingForm=()=> {
-  // MailService()
+const BusBookingForm = () => {
+  // Check if the page has been refreshed already
+  useLayoutEffect(() => {
+    const interval = setInterval(() => {
+      const username = localStorage.getItem('username');
+      if (username && !localStorage.getItem('reloaded')) {
+        localStorage.setItem('reloaded', 'true'); // Mark as reloaded
+        window.location.reload(); // Refresh the page
+      }
+    }, 1000);
+    return () => clearInterval(interval); // Cleanup
+  }, []);
 
-
-    // Check if the page has been refreshed already
-useLayoutEffect(()=>{
-    setInterval(() => {
-     const username=localStorage.getItem('username')
-     
-      
-    if(username){
-    if (!localStorage.getItem('reloaded')) {
-      localStorage.setItem('reloaded', 'true'); // Mark as reloaded
-      window.location.reload(); // Refresh the page
-    }
-  }
-}, 1000);
-})
-  
   const [source, setSource] = useState('');
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState('');
-  const [reviews,setreviews]=useState([]);
+  const [reviews, setReviews] = useState([]);
   const [sourceError, setSourceError] = useState(''); // Error state for source
   const [destinationError, setDestinationError] = useState(''); // Error state for destination
   const [dateError, setDateError] = useState(''); // Error state for date
@@ -35,31 +29,26 @@ useLayoutEffect(()=>{
   const dispatch = useDispatch(); // Use useDispatch to dispatch actions
   const navigate = useNavigate();
 
- 
- 
-  useEffect(()=>{
-  async function reviewfeatching (){
-  const Apireview= await axios.get('http://localhost:8080/displayReview')
-  if(Apireview.data){
-    setreviews(Apireview.data)
-
-  }
-  else{
-    console.log("No data Found !");
-    
-  }
-  
-  }
-  reviewfeatching()
-},[])
-
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await axios.get('https://safar-bus-booking-system.onrender.com/displayReview');
+        if (response.data) {
+          setReviews(response.data);
+        } else {
+          console.log("No data Found!");
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+    fetchReviews();
+  }, []);
 
   const locations = [
-    // List of locations
-
-    "Khadvali","Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad", "Ahmedabad", "Pune","Thane","Pryagraj","Kalyan","Pune","Nashik","Bhusawal","Jaunpur","Janghai","Pratapgad","Vanarsi","Ayodhya"
-
-    // Add other locations here
+    "Khadvali", "Mumbai", "Delhi", "Bengaluru", "Kolkata", "Chennai", "Hyderabad",
+    "Ahmedabad", "Pune", "Thane", "Pryagraj", "Kalyan", "Nashik", "Bhusawal",
+    "Jaunpur", "Janghai", "Pratapgad", "Vanarsi", "Ayodhya"
   ];
 
   const [filteredSourceSuggestions, setFilteredSourceSuggestions] = useState([]);
@@ -75,22 +64,16 @@ useLayoutEffect(()=>{
   const handleSourceChange = (e) => {
     const input = e.target.value;
     setSource(input);
-
-    const filteredSuggestions = locations.filter((location) =>
-      location.toLowerCase().startsWith(input.toLowerCase())
-    );
-    setFilteredSourceSuggestions(filteredSuggestions);
+    const filtered = locations.filter(loc => loc.toLowerCase().startsWith(input.toLowerCase()));
+    setFilteredSourceSuggestions(filtered);
     setShowSourceSuggestions(true);
   };
 
   const handleDestinationChange = (e) => {
     const input = e.target.value;
     setDestination(input);
-
-    const filteredSuggestions = locations.filter((location) =>
-      location.toLowerCase().startsWith(input.toLowerCase())
-    );
-    setFilteredDestinationSuggestions(filteredSuggestions);
+    const filtered = locations.filter(loc => loc.toLowerCase().startsWith(input.toLowerCase()));
+    setFilteredDestinationSuggestions(filtered);
     setShowDestinationSuggestions(true);
   };
 
@@ -144,14 +127,7 @@ useLayoutEffect(()=>{
 
     // If all fields are valid, proceed to search
     if (valid) {
-      // Dispatch the updated filter values
-      dispatch(
-        setFilter({
-          source,
-          destination,
-          date,
-        })
-      );
+      dispatch(setFilter({ source, destination, date }));
       navigate('/searchBus');
     }
   };
@@ -183,10 +159,10 @@ useLayoutEffect(()=>{
       <div className="relative z-20 bg-gradient-to-r from-white to-blue-100 p-8 rounded-lg shadow-2xl w-full max-w-7.5xl">
         <h1 className="text-3xl font-extrabold text-blue-800 mb-6 text-center">Book Your Bus</h1>
 
-        <div className="flex space-x-6 items-center">
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6 items-center">
 
           {/* Source Input */}
-          <div className="relative w-1/4">
+          <div className="relative w-full md:w-1/4">
             <label className="block text-gray-700 mb-2">Source</label>
             <input
               type="text"
@@ -222,7 +198,7 @@ useLayoutEffect(()=>{
           </button>
 
           {/* Destination Input */}
-          <div className="relative w-1/4">
+          <div className="relative w-full md:w-1/4">
             <label className="block text-gray-700 mb-2">Destination</label>
             <input
               type="text"
@@ -250,7 +226,7 @@ useLayoutEffect(()=>{
           </div>
 
           {/* Date Input */}
-          <div className="relative w-1/4">
+          <div className="relative w-full md:w-1/4">
             <label className="block text-gray-700 mb-2">Date of Travel</label>
             <input
               type="date"
@@ -272,23 +248,30 @@ useLayoutEffect(()=>{
           </button>
         </div>
       </div>
+
       {/* Customer Reviews */}
-      <div className="relative z-10 mt-10 w-full max-w-xl">
-        <h2 className="text-2xl font-bold text-blue-800 mb-4 text-center">Customer Reviews</h2>
-        <div className="flex space-x-4 animate-slide-in justify-center">
-          {reviews.map((review) => (
+      <div className="flex flex-wrap justify-center gap-4 mt-8">
+        {reviews.length > 0 ? (
+          reviews.map((review, index) =>
+         
+            
+            (
+          
+            
             <div
-              key={review.id}
-              className="flex-none w-64 bg-gradient-to-br from-white to-blue-100 p-6 rounded-lg shadow-xl text-center transform hover:scale-105 transition duration-300"
+              key={index}
+              className="bg-white p-4 rounded-lg shadow-md w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
             >
-              <h3 className="text-xl font-bold text-blue-700">{review.name}</h3>
+              <h3 className="font-semibold text-lg text-blue-700">{review.name}</h3>
               <p className="text-gray-600 mt-2">{review.review}</p>
             </div>
-          ))}
-        </div>
+          ))
+        ) : (
+          <p className="text-gray-600">No reviews available.</p>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default BusBookingForm;

@@ -14,7 +14,7 @@ function ForgetPassword() {
 
     const handleGenerateOtp = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/verifyMobile', { mobNum: mobileNumber, email: email });
+            const response = await axios.post('https://safar-bus-booking-system.onrender.com/verifyMobile', { mobNum: mobileNumber, email: email });
             
             if (response.data.success) {
                 const otp = Math.floor(1000 + Math.random() * 9000); // Generate 4-digit OTP
@@ -32,7 +32,7 @@ If you did not request this, please ignore this email.
 Thank you,
 Safar Support Team`; // Use the generated OTP here
                 
-                await axios.post('http://localhost:8080/sendGmail', {
+                await axios.post('https://safar-bus-booking-system.onrender.com/sendGmail', {
                     text: text,
                     gmail: email,
                     Subject: subject
@@ -59,7 +59,7 @@ Safar Support Team`; // Use the generated OTP here
 
     const handleResetPassword = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/resetPassword', {
+            const response = await axios.post('https://safar-bus-booking-system.onrender.com/resetPassword', {
                 mobNum: mobileNumber,
                 email: email,
                 newPassword: newPassword
