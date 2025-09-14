@@ -142,7 +142,7 @@ const PassengerDetailsForm = () => {
     }
 
     setIsSubmitting(true);
-
+    // This is simple timeout function
     setTimeout(() => {
       alert("Details submitted successfully!");
 
