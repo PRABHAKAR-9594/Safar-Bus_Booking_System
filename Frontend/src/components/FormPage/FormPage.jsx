@@ -1,44 +1,46 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import TopBar from '../SearchBus/BusTopbar';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { useDispatch, useSelector } from 'react-redux';
-import { setPassengers } from '../../Features/PassengersSlice';
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import TopBar from "../SearchBus/BusTopbar";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { setPassengers } from "../../Features/PassengersSlice";
 
 const PassengerDetailsForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();  // Initialize dispatch
+  const dispatch = useDispatch(); // Initialize dispatch
 
-  const Source = useSelector(state => state.filter.source);
-  const Destination = useSelector(state => state.filter.destination);
-  const Date = useSelector(state => state.filter.date);
-  const selectedTotalPrice = useSelector((state) => state.seatNumPrice.totalPrice)
-  const selectedPrice = useSelector((state) => state.businfo.price)
+  const Source = useSelector((state) => state.filter.source);
+  const Destination = useSelector((state) => state.filter.destination);
+  const Date = useSelector((state) => state.filter.date);
+  const selectedTotalPrice = useSelector(
+    (state) => state.seatNumPrice.totalPrice
+  );
+  const selectedPrice = useSelector((state) => state.businfo.price);
 
   const { selectedSeats } = location.state || {};
 
   if (!selectedSeats || selectedSeats.length === 0) {
     return <p>No seats selected. Please go back and select seats.</p>;
   }
-
+  //kjhkhjkhk
   // Initialize state with each passenger getting a seat number from selectedSeats
   const [passengerDetails, setPassengerDetails] = useState(
     selectedSeats.map((seatNum) => ({
-      name: '',
-      age: '',
-      gender: '',
-      mobile: '',
-      address: '',
+      name: "",
+      age: "",
+      gender: "",
+      mobile: "",
+      address: "",
       price: selectedPrice,
-      seatNum: seatNum,  // Assign seatNum from selectedSeats
+      seatNum: seatNum, // Assign seatNum from selectedSeats
       errors: {
-        name: '',
-        age: '',
-        gender: '',
-        mobile: '',
-        address: ''
-      }
+        name: "",
+        age: "",
+        gender: "",
+        mobile: "",
+        address: "",
+      },
     }))
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,51 +48,57 @@ const PassengerDetailsForm = () => {
   const handleChange = (index, field, value) => {
     const updatedDetails = [...passengerDetails];
     updatedDetails[index][field] = value;
-    updatedDetails[index].errors = validateField(field, value, updatedDetails[index].errors);
+    updatedDetails[index].errors = validateField(
+      field,
+      value,
+      updatedDetails[index].errors
+    );
     setPassengerDetails(updatedDetails);
   };
 
   const validateField = (field, value, errors) => {
-  switch (field) {
-    case 'name':
-      errors.name = value.length < 3
-        ? 'Full name must be at least 3 characters'
-        : !/^[A-Za-z\s]+$/.test(value)
-          ? 'Name must contain only alphabets'
-          : '';
-      break;
-    case 'age':
-      errors.age = isNaN(value) || value < 1 
-        ? 'Age must be a valid number between 1 and 120'
-        : '';
-      break;
-    case 'gender':
-      errors.gender = value === ''
-        ? 'Gender is required'
-        : !['male', 'female', 'other'].includes(value.toLowerCase())
-          ? 'Gender must be either Male, Female, or Other'
-          : '';
-      break;
-    case 'mobile':
-      errors.mobile = !/^[1-9]\d{9}$/.test(value)
-        ? 'Mobile number must be a valid 10-digit number without leading zeros'
-        : '';
-      break;
-    case 'address':
-      errors.address = value.length < 10
-        ? 'Address must be at least 10 characters'
-        : '';
-      break;
-    default:
-      break;
-  }
-  return errors;
-};
+    switch (field) {
+      case "name":
+        errors.name =
+          value.length < 3
+            ? "Full name must be at least 3 characters"
+            : !/^[A-Za-z\s]+$/.test(value)
+            ? "Name must contain only alphabets"
+            : "";
+        break;
+      case "age":
+        errors.age =
+          isNaN(value) || value < 1
+            ? "Age must be a valid number between 1 and 120"
+            : "";
+        break;
+      case "gender":
+        errors.gender =
+          value === ""
+            ? "Gender is required"
+            : !["male", "female", "other"].includes(value.toLowerCase())
+            ? "Gender must be either Male, Female, or Other"
+            : "";
+        break;
+      case "mobile":
+        errors.mobile = !/^[1-9]\d{9}$/.test(value)
+          ? "Mobile number must be a valid 10-digit number without leading zeros"
+          : "";
+        break;
+      case "address":
+        errors.address =
+          value.length < 10 ? "Address must be at least 10 characters" : "";
+        break;
+      default:
+        break;
+    }
+    return errors;
+  };
 
   const scrollToError = () => {
-    const firstErrorField = document.querySelector('.error');
+    const firstErrorField = document.querySelector(".error");
     if (firstErrorField) {
-      firstErrorField.scrollIntoView({ behavior: 'smooth' });
+      firstErrorField.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -104,11 +112,11 @@ const PassengerDetailsForm = () => {
       const { name, age, gender, mobile, address, errors } = passenger;
 
       updatedDetails[index].errors = {
-        ...validateField('name', name, errors),
-        ...validateField('age', age, errors),
-        ...validateField('gender', gender, errors),
-        ...validateField('mobile', mobile, errors),
-        ...validateField('address', address, errors)
+        ...validateField("name", name, errors),
+        ...validateField("age", age, errors),
+        ...validateField("gender", gender, errors),
+        ...validateField("mobile", mobile, errors),
+        ...validateField("address", address, errors),
       };
 
       if (
@@ -121,8 +129,8 @@ const PassengerDetailsForm = () => {
         isValid = false;
       }
 
-      if(passengerDetails.age <=0){
-        alert("Please enter the valid age !")
+      if (passengerDetails.age <= 0) {
+        alert("Please enter the valid age !");
       }
     });
 
@@ -136,39 +144,52 @@ const PassengerDetailsForm = () => {
     setIsSubmitting(true);
 
     setTimeout(() => {
-      alert('Details submitted successfully!');
+      alert("Details submitted successfully!");
 
       dispatch(setPassengers(passengerDetails));
 
-      console.log(passengerDetails);  // You can now see seatNum for each passenger here
+      console.log(passengerDetails); // You can now see seatNum for each passenger here
       console.log(selectedTotalPrice);
       setIsSubmitting(false);
 
-      navigate('/searchBus/viewSeats/Form/payment', { state: { passengerDetails } });
+      navigate("/searchBus/viewSeats/Form/payment", {
+        state: { passengerDetails },
+      });
     }, 2000);
   };
 
   const isFormValid = () => {
-    return passengerDetails.every(passenger => {
-      return Object.values(passenger.errors).every(error => !error);
+    return passengerDetails.every((passenger) => {
+      return Object.values(passenger.errors).every((error) => !error);
     });
   };
 
-  const renderInputField = (type, index, field, placeholder, sizeClass = 'w-full') => (
+  const renderInputField = (
+    type,
+    index,
+    field,
+    placeholder,
+    sizeClass = "w-full"
+  ) => (
     <input
       type={type}
       placeholder={placeholder}
       value={passengerDetails[index][field]}
       onChange={(e) => handleChange(index, field, e.target.value)}
       className={`block ${sizeClass} mb-2 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm ${
-        passengerDetails[index].errors[field] ? 'border-red-500 error ring-red-500' : 'border-gray-300'
+        passengerDetails[index].errors[field]
+          ? "border-red-500 error ring-red-500"
+          : "border-gray-300"
       } transition-all duration-300 bg-gray-50`}
       required
     />
   );
 
   const renderProgressBar = () => {
-    const completed = (selectedSeats.length - passengerDetails.filter(pd => pd.name === '').length) / selectedSeats.length;
+    const completed =
+      (selectedSeats.length -
+        passengerDetails.filter((pd) => pd.name === "").length) /
+      selectedSeats.length;
     return (
       <div className="relative w-full h-2 mb-4 bg-gray-200 rounded-full">
         <div
@@ -181,29 +202,43 @@ const PassengerDetailsForm = () => {
 
   return (
     <div className="p-8 bg-gradient-to-r from-gray-100 to-blue-50 min-h-screen">
-      <TopBar source={Source} destination={Destination} date={Date} seats={selectedSeats} />
-      <h2 className="text-3xl font-bold text-indigo-700 mb-8 mt-32 text-center">Passenger Details</h2>
+      <TopBar
+        source={Source}
+        destination={Destination}
+        date={Date}
+        seats={selectedSeats}
+      />
+      <h2 className="text-3xl font-bold text-indigo-700 mb-8 mt-32 text-center">
+        Passenger Details
+      </h2>
 
       {renderProgressBar()}
 
       <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl mx-auto">
         {selectedSeats.map((seat, index) => (
-          <div key={seat} className="p-6 bg-purple-200 rounded-lg shadow-md border border-gray-300 transition-all duration-300">
+          <div
+            key={seat}
+            className="p-6 bg-purple-200 rounded-lg shadow-md border border-gray-300 transition-all duration-300"
+          >
             <h3 className="text-2xl font-bold text-blue-800 mb-4">
               Passenger {index + 1} (Seat {seat}):
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {renderInputField('text', index, 'name', 'Full Name')}
+              {renderInputField("text", index, "name", "Full Name")}
               {passengerDetails[index].errors.name && (
-                <p className="text-red-500">{passengerDetails[index].errors.name}</p>
+                <p className="text-red-500">
+                  {passengerDetails[index].errors.name}
+                </p>
               )}
 
               <div className="grid grid-cols-2 gap-4">
-                {renderInputField('number', index, 'age', 'Age', 'w-full')}
+                {renderInputField("number", index, "age", "Age", "w-full")}
                 <select
                   value={passengerDetails[index].gender}
-                  onChange={(e) => handleChange(index, 'gender', e.target.value)}
+                  onChange={(e) =>
+                    handleChange(index, "gender", e.target.value)
+                  }
                   className="block w-full p-2 rounded-lg border-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300 bg-gray-50"
                   required
                 >
@@ -213,18 +248,30 @@ const PassengerDetailsForm = () => {
                   <option value="other">Other</option>
                 </select>
                 {passengerDetails[index].errors.gender && (
-                  <p className="text-red-500">{passengerDetails[index].errors.gender}</p>
+                  <p className="text-red-500">
+                    {passengerDetails[index].errors.gender}
+                  </p>
                 )}
               </div>
 
-              {renderInputField('tel', index, 'mobile', 'Mobile Number', 'w-full')}
+              {renderInputField(
+                "tel",
+                index,
+                "mobile",
+                "Mobile Number",
+                "w-full"
+              )}
               {passengerDetails[index].errors.mobile && (
-                <p className="text-red-500">{passengerDetails[index].errors.mobile}</p>
+                <p className="text-red-500">
+                  {passengerDetails[index].errors.mobile}
+                </p>
               )}
 
-              {renderInputField('text', index, 'address', 'Address')}
+              {renderInputField("text", index, "address", "Address")}
               {passengerDetails[index].errors.address && (
-                <p className="text-red-500">{passengerDetails[index].errors.address}</p>
+                <p className="text-red-500">
+                  {passengerDetails[index].errors.address}
+                </p>
               )}
             </div>
           </div>
@@ -241,7 +288,7 @@ const PassengerDetailsForm = () => {
               Submitting...
             </>
           ) : (
-            'Submit Details'
+            "Submit Details"
           )}
         </button>
       </form>
