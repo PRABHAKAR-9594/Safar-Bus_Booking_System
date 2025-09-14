@@ -158,6 +158,8 @@ const PassengerDetailsForm = () => {
     }, 2000);
   };
 
+  // it is for the validating the function
+
   const isFormValid = () => {
     return passengerDetails.every((passenger) => {
       return Object.values(passenger.errors).every((error) => !error);
